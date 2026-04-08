@@ -25,6 +25,28 @@ class Entity(arcade.Sprite):
         self.color = color
         self.size = size
 
+        # Hide the default sprite texture; entity debug rendering uses hitbox + label only.
+        texture_size = max(self.size)
+        self.texture = arcade.make_soft_square_texture(
+            texture_size,
+            arcade.color.WHITE,
+            center_alpha=0,
+            outer_alpha=0,
+        )
+
+        # Updates hitbox to match the specified size.
+        width, height = self.size
+        half_width = width / 2
+        half_height = height / 2
+        self.hit_box = arcade.hitbox.HitBox(
+            [
+                (-half_width, -half_height),
+                (half_width, -half_height),
+                (half_width, half_height),
+                (-half_width, half_height),
+            ]
+        )
+
 
     def receive_damage(self, damage: int):
         self.life -= damage
@@ -45,6 +67,7 @@ class Entity(arcade.Sprite):
             font_size,
             anchor_x="center",
             anchor_y="center",
+            rotation=self.angle,
         )
     
     

@@ -7,7 +7,7 @@ from ..entity import Entity
 
 class Player(Entity): 
     def __init__(self, input: InputHandler):
-        super().__init__(name="Player", color=arcade.color.BLUE, size=(30, 30))
+        super().__init__(name="Player", color=arcade.color.GOLD, size=(100, 100))
         self.input = input
         self.movement_speed = 10
         self.look_offset = -90
