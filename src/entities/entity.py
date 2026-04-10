@@ -7,6 +7,8 @@ class Entity(arcade.Sprite):
     life: int
     attack: int
     color: arcade.color
+    _name_text: arcade.Text | None
+    _name_text_font_size: int
 
 
     def __init__(
@@ -24,6 +26,8 @@ class Entity(arcade.Sprite):
         self.attack = attack
         self.color = color
         self.size = size
+        self._name_text = None
+        self._name_text_font_size = -1
 
         # Hide the default sprite texture; entity debug rendering uses hitbox + label only.
         texture_size = max(self.size)
@@ -59,15 +63,23 @@ class Entity(arcade.Sprite):
 
 
     def draw_name(self, font_size: int = 12):
-        arcade.draw_text(
-            self.name,
-            self.center_x,
-            self.center_y,
-            self.color,
-            font_size,
-            anchor_x="center",
-            anchor_y="center",
-            rotation=self.angle,
-        )
+        if self._name_text is None or self._name_text_font_size != font_size:
+            self._name_text = arcade.Text(
+                self.name,
+                self.center_x,
+                self.center_y,
+                self.color,
+                font_size,
+                anchor_x="center",
+                anchor_y="center",
+            )
+            self._name_text_font_size = font_size
+
+        self._name_text.text = self.name
+        self._name_text.x = self.center_x
+        self._name_text.y = self.center_y
+        self._name_text.color = self.color
+        self._name_text.rotation = self.angle
+        self._name_text.draw()
     
     

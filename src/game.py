@@ -1,4 +1,6 @@
 import arcade
+
+from .areas import Area
 from .utils import Config, ConfigKey
 from .entities import Entity, Player
 from .handlers import InputHandler
@@ -20,10 +22,12 @@ class GameView(arcade.View):
         self.main_scene = arcade.Scene()
         self.inputs = InputHandler()    
         self.player = Player(input=self.inputs)
+        self.areax = Area(100, 100, 200, 200)
         
 
         # Add the player to the main scene.
         self.main_scene.add_sprite(self.player.name, self.player)
+        self.main_scene.add_sprite("areax", self.areax.sprite)
 
 
     def on_show_view(self):
@@ -46,6 +50,7 @@ class GameView(arcade.View):
     def on_update(self, delta_time: float):
         # Called every frame to update game logic.
         self.player.update(delta_time)
+        self.areax.update([self.player])
 
 
     def on_key_press(self, key: int, modifiers: int):
