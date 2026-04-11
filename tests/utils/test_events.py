@@ -1,85 +1,94 @@
 import pytest
-
 from src.utils import Event
 
 
 @pytest.fixture
-def event() -> Event:
+def empty_callback():
+	return lambda *_args, **_kwargs: None
+
+
+@pytest.fixture
+def empty_event():
 	return Event()
 
 
-def test_suscribe_adds_callback(event: Event):
-	callback = lambda *_args, **_kwargs: None
-
-	event.suscribe(callback)
-
-	assert callback in event.callbacks
-
-
-def test_unsuscribe_removes_existing_callback(event: Event):
-	callback = lambda *_args, **_kwargs: None
-	event.suscribe(callback)
-
-	event.unsuscribe(callback)
-
-	assert callback not in event.callbacks
+@pytest.fixture
+def event_with_validators() -> Event[[int, str]]:
+	event = Event[[int, str]]()
+	event.validators = [
+		lambda value, label, **kw: value > 0, # Validator that checks if the value is positive.
+		lambda _, label, **kw: len(label) > 0, # Validator that checks if the label is not empty.
+	]
+	return event
 
 
-def test_unsuscribe_ignores_unknown_callback(event: Event):
-	callback = lambda *_args, **_kwargs: None
-
-	event.unsuscribe(callback)
-
-	assert event.callbacks == []
+def test_suscribe_adds_callback(empty_event: Event, empty_callback: callable):
+	empty_event.subscribe(empty_callback)
+	assert empty_callback in empty_event.callbacks
 
 
-def test_trigger_calls_callback_when_validators_pass(event: Event):
+def test_unsuscribe_removes_existing_callback(empty_event: Event, empty_callback: callable):
+	empty_event.subscribe(empty_callback)
+
+	empty_event.unsubscribe(empty_callback)
+
+	assert empty_callback not in empty_event.callbacks
+
+
+def test_unsuscribe_ignores_unknown_callback(empty_event: Event, empty_callback: callable):
+	with pytest.raises(ValueError):
+		empty_event.unsubscribe(empty_callback)
+
+
+def test_trigger_calls_callback_when_validators_pass(event_with_validators: Event[[int, str]]):
+    calls = []
+
+    def callback(possitive_value, label):
+        calls.append((possitive_value, label))
+
+    event_with_validators.subscribe(callback)
+    event_with_validators.trigger(10, "ok")
+
+    assert calls == [(10, "ok")]
+
+
+def test_trigger_does_not_call_callback_when_validator_fails(event_with_validators: Event[[int, str]]):
 	calls = []
 
-	def callback(value, label, *, flag=False):
-		calls.append((value, label, flag))
+	def callback(possitive_value, label):
+		calls.append((possitive_value, label))
+	
+	event_with_validators.subscribe(callback)
 
-	event.validators = [lambda v: isinstance(v, int), lambda v: isinstance(v, str)]
-	event.suscribe(callback)
+	# Trigger with wrong value type.
+	with pytest.raises(ValueError):
+		event_with_validators.trigger(-1, 'ok')
 
-	event.trigger(10, "ok", flag=True)
+	# Trigger with wrong label type.
+	with pytest.raises(ValueError):
+		event_with_validators.trigger(10, '')
 
-	assert calls == [(10, "ok", True)]
+
+def test_clear_removes_all_callbacks(empty_event: Event, empty_callback: callable):
+	empty_event.subscribe(empty_callback)
+	empty_event.subscribe(lambda: None)  # Add another callback to ensure all are cleared.
+
+	empty_event.clear()
+
+	assert empty_event.callbacks == []
 
 
-def test_trigger_does_not_call_callback_when_validator_fails(event: Event):
+def test_event_param_specification():
+	event = Event[[int, str]]()
+
 	called = False
 
-	def callback(*_args, **_kwargs):
+	def callback(value: int, label: str):
 		nonlocal called
 		called = True
 
-	event.validators = [lambda v: isinstance(v, int)]
-	event.suscribe(callback)
+	event.subscribe(callback)
 
-	event.trigger("invalid")
-
-	assert called is False
-
-
-def test_trigger_without_validators_still_calls_callback(event: Event):
-	called = False
-
-	def callback(*_args, **_kwargs):
-		nonlocal called
-		called = True
-
-	event.suscribe(callback)
-
-	event.trigger("anything")
+	event.trigger(42, "test")
 
 	assert called is True
-
-
-def test_clear_removes_all_callbacks(event: Event):
-	event.suscribe(lambda *_args, **_kwargs: None)
-	event.suscribe(lambda *_args, **_kwargs: None)
-
-	event.clear()
-
-	assert event.callbacks == []

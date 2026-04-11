@@ -1,25 +1,32 @@
-type Validator = callable[[object], bool]
+from typing import Callable, Generic, ParamSpec
 
-class Event:
-    def __init__(self):
-        self.callbacks: list[callable] = []
-        self.validators: list[Validator] = []
-
-    
-    def suscribe(self, fn: callable):
-        self.callbacks.append(fn)
+P = ParamSpec("P")
+Validator = Callable[..., bool]
 
 
-    def unsuscribe(self, fn: callable):
-        if fn in self.callbacks:
-            self.callbacks.remove(fn)
+class Event(Generic[P]):
+    def __init__(self, validators: list[Validator] | None = None):
+        self.callbacks: set[Callable[P, None]] = set()
+        self.validators = validators or []
 
 
-    def trigger(self, *args, **kwargs):
+    def subscribe(self, fn: Callable[P, None]) -> None:
+        self.callbacks.add(fn)
+
+
+    def unsubscribe(self, fn: Callable[P, None]) -> None:
+        if not fn in self.callbacks:
+            raise ValueError("Callback not found")
+        self.callbacks.discard(fn)
+
+
+    def trigger(self, *args: P.args, **kwargs: P.kwargs) -> None:
+        if not all(v(*args, **kwargs) for v in self.validators):
+            raise ValueError("Event validation failed")
+
         for fn in self.callbacks:
-            if all(validator(arg) for validator, arg in zip(self.validators, args)):
-                fn(*args, **kwargs)
+            fn(*args, **kwargs)
 
 
-    def clear(self):
+    def clear(self) -> None:
         self.callbacks.clear()
