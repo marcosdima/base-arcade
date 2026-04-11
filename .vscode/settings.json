@@ -10,7 +10,8 @@
 "**/.venv": true,
 "**/.vscode": true,
 "**/**pycache**": true,
-"**/*.pyc": true
+"**/*.pyc": true,
+"**/.pytest_cache": true,
 },
 "python.testing.pytestArgs": [
     "tests"
