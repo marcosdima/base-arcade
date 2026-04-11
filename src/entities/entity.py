@@ -1,30 +1,17 @@
 import arcade
+from .helpers import Helpers
 
 
 class Entity(arcade.Sprite):
     '''Base class for all entities in the game.'''
-    name: str
-    life: int
-    attack: int
-    color: arcade.color
-    _name_text: arcade.Text | None
-    _name_text_font_size: int
-
-
     def __init__(
         self,
         name: str = "Entity",
-        life: int = 3,
-        attack: int = 1,
         size: tuple[int] = (32, 32),
-        color: arcade.color = arcade.color.WHITE,
     ):
         super().__init__()
         
         self.name = name
-        self.life = life
-        self.attack = attack
-        self.color = color
         self.size = size
         self._name_text = None
         self._name_text_font_size = -1
@@ -51,25 +38,18 @@ class Entity(arcade.Sprite):
             ]
         )
 
-
-    def receive_damage(self, damage: int):
-        self.life -= damage
-        if self.life < 0:
-            self.life = 0
-
-    
-    def is_alive(self) -> bool:
-        return self.life > 0
+        # Set helpers.
+        self.helpers = Helpers(self)
 
 
     def draw_name(self, font_size: int = 12):
         if self._name_text is None or self._name_text_font_size != font_size:
             self._name_text = arcade.Text(
-                self.name,
-                self.center_x,
-                self.center_y,
-                self.color,
-                font_size,
+                text=self.name,
+                x=self.center_x,
+                y=self.center_y,
+                color=arcade.color.WHITE,
+                font_size=font_size,
                 anchor_x="center",
                 anchor_y="center",
             )
@@ -78,7 +58,7 @@ class Entity(arcade.Sprite):
         self._name_text.text = self.name
         self._name_text.x = self.center_x
         self._name_text.y = self.center_y
-        self._name_text.color = self.color
+        self._name_text.color = arcade.color.WHITE
         self._name_text.rotation = self.angle
         self._name_text.draw()
     

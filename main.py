@@ -1,9 +1,8 @@
 import arcade
 
-from src.game import GameView
+from src.game.game import GameView
 from src.utils import Config, ConfigKey
 
-CONFIG = Config()
 
 def main():
     """Main function"""

@@ -12,8 +12,8 @@ class Area:
         self._inside = set()
         self.on_enter: Event = Event()
         self.on_exit: Event = Event()
-        self.on_enter.suscribe(fn=lambda s: print(f"Sprite {s} entered area"))
-        self.on_exit.suscribe(fn=lambda s: print(f"Sprite {s} exited area"))
+        self.on_enter.subscribe(fn=lambda s: print(f"Sprite {s} entered area"))
+        self.on_exit.subscribe(fn=lambda s: print(f"Sprite {s} exited area"))
 
 
     def update(self, sprites: list):

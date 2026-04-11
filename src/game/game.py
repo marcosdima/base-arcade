@@ -1,9 +1,10 @@
 import arcade
 
-from .areas import Area
-from .utils import Config, ConfigKey
-from .entities import Entity, Player
-from .handlers import InputHandler
+from ..areas import Area
+from ..utils import Config, ConfigKey
+from ..entities import Entity
+from .player import Player
+from .handlers import MouseHandler, KeyboardHandler
 
 
 class GameView(arcade.View):
@@ -20,13 +21,15 @@ class GameView(arcade.View):
         self.camera_sprites = arcade.Camera2D()
         self.camera_gui = arcade.Camera2D()
         self.main_scene = arcade.Scene()
-        self.inputs = InputHandler()    
-        self.player = Player(input=self.inputs)
+        self.mouse_handler = MouseHandler()
+        self.keyboard_handler = KeyboardHandler() 
+
+        # Test player and areas.
+        self.player = Player(mouse=self.mouse_handler, keyboard=self.keyboard_handler)
         self.areax = Area(100, 100, 200, 200)
         
-
         # Add the player to the main scene.
-        self.main_scene.add_sprite(self.player.name, self.player)
+        self.main_scene.add_sprite(self.player.body.name, self.player.body)
         self.main_scene.add_sprite("areax", self.areax.sprite)
 
 
@@ -49,18 +52,18 @@ class GameView(arcade.View):
 
     def on_update(self, delta_time: float):
         # Called every frame to update game logic.
-        self.player.update(delta_time)
-        self.areax.update([self.player])
+        self.areax.update([self.player.body])
+        self.main_scene.update(delta_time)
 
 
     def on_key_press(self, key: int, modifiers: int):
         # Called when a keyboard key is pressed.
-        self.inputs.key_pressed(key)
+        self.keyboard_handler.key_pressed(key)
 
 
     def on_key_release(self, key: int, modifiers: int):
         # Called when a keyboard key is released.
-        self.inputs.key_released(key)
+        self.keyboard_handler.key_released(key)
 
 
     def on_mouse_press(self, x: int, y: int, button: int, modifiers: int):
@@ -75,4 +78,4 @@ class GameView(arcade.View):
     
     def on_mouse_motion(self, x: int, y: int, dx: int, dy: int):
         # Called when the mouse moves.
-        self.inputs.update_mouse(x, y, dx, dy)
+        self.mouse_handler.update_mouse(x, y, dx, dy)
