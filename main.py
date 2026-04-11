@@ -1,6 +1,6 @@
 import arcade
 
-from src.game.game import GameView
+from src.views import MenuView
 from src.utils import Config, ConfigKey
 
 
@@ -12,9 +12,10 @@ def main():
         Config.get(ConfigKey.WINDOW_HEIGHT, 600),
         Config.get(ConfigKey.TITLE, "My Game")
     )
-    game = GameView(window=window)
 
-    window.show_view(game)
+    menu = MenuView()
+
+    window.show_view(menu)
     arcade.run()
 
 

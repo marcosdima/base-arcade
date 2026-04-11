@@ -1,4 +1,4 @@
-from ...utils import Event
+from ..utils import Event
 
 
 class MouseHandler:

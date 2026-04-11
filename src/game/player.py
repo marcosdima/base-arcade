@@ -1,8 +1,8 @@
 import arcade
 import math
-from .handlers import MouseHandler, KeyboardHandler
+from ..handlers import MouseHandler, KeyboardHandler
 from ..utils import Config, ConfigKey
-from ..entities import Entity
+from .entities import Entity
 
 
 class Player: 
@@ -12,7 +12,7 @@ class Player:
         self.keyboard = keyboard
 
         # Player attributes.
-        self.movement_speed = 10
+        self.movement_speed = 5
         self.look_offset = -90
 
         # Entity body.
