@@ -4,13 +4,20 @@ from ..utils import Event
 class KeyboardHandler:
 	def __init__(self):
 		self.keys: dict[int, bool] = {}
+
+		# General events.
 		self.on_key_pressed = Event[[int]]()
 		self.on_key_released = Event[[int]]()
+
+		# Indivudual key events.
+		self.on_escape_pressed = Event()
 
 
 	def key_pressed(self, key: int):
 		self.keys[key] = True
 		self.on_key_pressed.trigger(key)
+		if key == arcade.key.ESCAPE:
+			self.on_escape_pressed.trigger()
 		
 
 	def key_released(self, key: int):
