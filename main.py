@@ -4,7 +4,7 @@ from src.views import MenuView
 from src.utils import Config, ConfigKey, Lang, Language
 
 config = Config()
-lang = Lang(default_language=Language.SPANISH)
+lang = Lang(default_language=Config.get(ConfigKey.LANGUAGE, 'en'))
 
 window = arcade.Window(
     Config.get(ConfigKey.WINDOW_WIDTH, 800),

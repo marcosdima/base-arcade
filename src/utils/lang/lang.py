@@ -13,18 +13,18 @@ class Lang:
     _instance = None
 
     
-    def __new__(cls, default_language: Language = Language.ENGLISH):
+    def __new__(cls, default_language: (Language | str) = Language.ENGLISH):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
         return cls._instance
 
 
-    def __init__(self, default_language: Language = Language.ENGLISH):
+    def __init__(self, default_language: (Language | str) = Language.ENGLISH):
         if getattr(self, "_initialized", False):
             return
         
         self._initialized = True
-        self.current_language = default_language
+        self.current_language = default_language if isinstance(default_language, Language) else Language(default_language)
         self.load_translations()
 
 

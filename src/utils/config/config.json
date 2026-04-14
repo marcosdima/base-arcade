@@ -1,5 +1,6 @@
 {
     "title": "Arcade Game",
+    "language": "es",
     "window": {
         "width": 800,
         "height": 600,

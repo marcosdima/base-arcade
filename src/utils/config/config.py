@@ -4,11 +4,15 @@ from ..event import Event
 
 
 class ConfigKey(enum.Enum):
+    # Game variables.
+    TITLE = 'title'
+
+    # Settings.
+    LANGUAGE = 'language'
     WINDOW_WIDTH = 'window-width'
     WINDOW_HEIGHT = 'window-height'
     BACKGROUND_COLOR = 'window-background_color'
-    TITLE = 'title'
-
+    
     # Input.
     MOVE_UP = 'input-movement-up'
     MOVE_DOWN = 'input-movement-down'
