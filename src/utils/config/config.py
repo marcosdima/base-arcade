@@ -1,5 +1,6 @@
 import json
 import enum
+from ..event import Event
 
 
 class ConfigKey(enum.Enum):
@@ -31,6 +32,7 @@ class Config:
             return
         self._initialized = True
         self.load()
+        self.field_changed = Event[[ConfigKey, any]]()
 
 
     @classmethod
@@ -50,6 +52,7 @@ class Config:
     @classmethod
     def set(cls, key: ConfigKey, value):
         cls._instance.config[key.value] = value
+        cls._instance.field_changed.trigger(key, value)
 
 
     @classmethod
