@@ -32,6 +32,9 @@ class GameView(BaseView):
             self.obstacles
         )
 
+        # Subscribe to pause menu event.
+        self.keyboard_handler.on_escape_pressed.subscribe(self.go_to_pause_menu)
+
 
     def on_draw(self):
         # Called every frame to render the screen.
@@ -50,3 +53,9 @@ class GameView(BaseView):
         self.areax.update([self.player.body])
         self.main_scene.update(delta_time)
         self.physics_engine.update()
+
+
+    def go_to_pause_menu(self):
+        from .pause import PauseView
+        self.window.show_view(PauseView(self))
+            
