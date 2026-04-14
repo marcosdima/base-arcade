@@ -1,4 +1,5 @@
 import enum
+from gettext import translation
 import json
 
 from ..functions import Functions
@@ -12,18 +13,18 @@ class Lang:
     _instance = None
 
     
-    def __new__(cls):
+    def __new__(cls, default_language: Language = Language.ENGLISH):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
         return cls._instance
 
 
-    def __init__(self, lang: Language = Language.ENGLISH):
+    def __init__(self, default_language: Language = Language.ENGLISH):
         if getattr(self, "_initialized", False):
             return
         
         self._initialized = True
-        self.current_language = lang
+        self.current_language = default_language
         self.load_translations()
 
 
@@ -54,6 +55,24 @@ class Lang:
             report[lang] = list(missing)
 
         return report
+    
+
+    def get_current_translation(self) -> dict:
+        return self.translations.get(self.current_language, {})
+
+
+    @classmethod
+    def get(cls, key: str) -> str:
+        parsed_key = key.split(".")
+
+        data = cls._instance.get_current_translation()
+
+        for part in parsed_key:
+            data = data.get(part, None)
+            if data is None:
+                raise AttributeError(f"Key '{key}' not found in Lang ({cls._instance.current_language.value}).")
+            
+        return data
 
 
 

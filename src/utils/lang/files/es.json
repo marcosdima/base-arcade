@@ -1,3 +1,13 @@
 {
-    "hi": "Hola"
+    "main_menu": {
+        "title": "Menú Principal",
+        "start": "Comenzar",
+        "quit": "Salir"
+    },
+    "pause": {
+        "title": "Juego en Pausa",
+        "resume": "Reanudar",
+        "main_menu": "Menú Principal",
+        "settings": "Configuración"
+    }
 }
