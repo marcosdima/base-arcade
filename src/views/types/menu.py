@@ -1,13 +1,14 @@
 import arcade
 import arcade.gui
 from ..base import BaseView
-from .game import GameView
+from ...utils import Lang
 
 
 class MenuView(BaseView):
     def __init__(self):
         super().__init__()
         self.ui = arcade.gui.UIManager()
+
 
     def on_show_view(self):
         self.ui.enable()
@@ -16,13 +17,16 @@ class MenuView(BaseView):
         arcade.set_background_color(arcade.color.BLACK)
 
         vbox = arcade.gui.UIBoxLayout(space_between=10)
+        title_label = arcade.gui.UILabel(text=Lang.get('main_menu.title'), font_size=36)
 
-        start_button = arcade.gui.UIFlatButton(text="Start", width=200)
-        quit_button = arcade.gui.UIFlatButton(text="Quit", width=200)
+        w = self.window.width
+        start_button = arcade.gui.UIFlatButton(text=Lang.get('main_menu.start'), width=int(w * 0.3))
+        quit_button = arcade.gui.UIFlatButton(text=Lang.get('main_menu.quit'), width=int(w * 0.3))
 
         start_button.on_click = self.on_click_start
         quit_button.on_click = self.on_click_quit
 
+        vbox.add(title_label)
         vbox.add(start_button)
         vbox.add(quit_button)
 
@@ -41,6 +45,7 @@ class MenuView(BaseView):
 
 
     def on_click_start(self, event):
+        from .game import GameView
         self.window.show_view(GameView())
 
 
