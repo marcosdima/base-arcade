@@ -6,13 +6,17 @@ from .entities import Entity
 
 
 class Player: 
-    def __init__(self, mouse: MouseHandler, keyboard: KeyboardHandler):
+    def __init__(
+        self,
+        mouse: MouseHandler,
+        keyboard: KeyboardHandler,
+    ):
         # Handler references.
         self.mouse = mouse
         self.keyboard = keyboard
 
         # Player attributes.
-        self.movement_speed = 5
+        self.movement_speed = 175
         self.look_offset = -90
 
         # Entity body.
@@ -62,4 +66,4 @@ class Player:
         if direction_x != 0 or direction_y != 0:
             angle = math.degrees(math.atan2(direction_y, direction_x))
             # Keep one consistent sprite face as "front" while tracking the mouse.
-            self.body.angle = -angle + self.look_offset
+            self.body.helpers.movement.rotate(-angle + self.look_offset)

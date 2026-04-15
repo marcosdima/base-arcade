@@ -1,5 +1,11 @@
 import arcade
+from enum import Enum
 from .helpers import Helpers
+
+
+class EntityGroup(Enum):
+    STATIC = 0
+    DYNAMIC = 1
 
 
 class Entity(arcade.Sprite):

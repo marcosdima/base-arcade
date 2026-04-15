@@ -19,6 +19,7 @@ class Helpers:
 
     def _set_default_helpers(self):
         self.movement = Movement(self.owner)
+        self.tags = Tags(self.owner)
 
 
     def activate_intereaction(self):

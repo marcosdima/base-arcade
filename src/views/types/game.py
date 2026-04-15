@@ -1,6 +1,6 @@
-from arcade import color, Scene, SpriteList, PhysicsEngineSimple
+from arcade import color, Scene
 from ..base import BaseView
-from ...game import Entity, Player, Area
+from ...game import Entity, Player, Area, World, WorldTag
 from ...utils import Interaction
 
 
@@ -8,30 +8,21 @@ class GameView(BaseView):
     def __init__(self):
         super().__init__()
 
-        # Set main scene.
-        self.main_scene = Scene()
+        # Set world and area scene.
+        self.world = World()
+        self.area_scene = Scene()
 
         # Test player and areas.
         self.player = Player(mouse=self.mouse_handler, keyboard=self.keyboard_handler)
+        self.player.body.helpers.tags.add(WorldTag.DYNAMIC.value)
+        self.world.add_entity(self.player.body)
         self.area1 = self._setup_area_1()
         self.area2 = self._setup_area_2()
-        
-        # Add the player to the main scene.
-        self.main_scene.add_sprite(self.player.body.name, self.player.body)
 
         # Collision tests.
-        self.obstacles = SpriteList(use_spatial_hash=True)
         obstacle1 = Entity('Obstacle1', (100, 100))
-        obstacle1.center_x = 100
-        obstacle1.center_y = 100
-        self.obstacles.append(obstacle1)
-        self.main_scene.add_sprite(obstacle1.name, obstacle1)
-
-        # Physics engine for player movement and collision with obstacles.
-        self.physics_engine = PhysicsEngineSimple(
-            self.player.body,
-            self.obstacles
-        )
+        obstacle1.helpers.tags.add(WorldTag.STATIC.value)
+        self.world.add_entity(obstacle1)
 
         # Subscribe to pause menu event.
         self.keyboard_handler.on_escape_pressed.subscribe(self.go_to_pause_menu)
@@ -40,10 +31,17 @@ class GameView(BaseView):
     def on_draw(self):
         # Called every frame to render the screen.
         self.clear()
-        self.main_scene.draw()
-        self.main_scene.draw_hit_boxes(color=color.RED, line_thickness=1)
+        self.world.draw()
+        self.area_scene.draw()
+        self.world.entities[WorldTag.STATIC].draw_hit_boxes(color=color.RED, line_thickness=1)
+        self.world.entities[WorldTag.DYNAMIC].draw_hit_boxes(color=color.RED, line_thickness=1)
 
-        for sprite_list in self.main_scene._sprite_lists:
+        for sprite_list in self.world.entities.values():
+            for sprite in sprite_list:
+                if isinstance(sprite, Entity):
+                    sprite.draw_name()
+
+        for sprite_list in self.area_scene._sprite_lists:
             for sprite in sprite_list:
                 if isinstance(sprite, Entity):
                     sprite.draw_name()
@@ -51,10 +49,9 @@ class GameView(BaseView):
 
     def on_update(self, delta_time: float):
         # Called every frame to update game logic.
+        self.world.update(delta_time)
         self.area1.update([self.player.body])
         self.area2.update([self.player.body])
-        self.main_scene.update(delta_time)
-        self.physics_engine.update()
 
 
     def go_to_pause_menu(self):
@@ -84,7 +81,7 @@ class GameView(BaseView):
 
         area.on_enter.subscribe(_on_player_enter_area)
         area.on_exit.subscribe(_on_player_exit_area)
-        self.main_scene.add_sprite("area1", area.sprite)
+        self.area_scene.add_sprite("area1", area.sprite)
 
         return area
 
@@ -111,6 +108,6 @@ class GameView(BaseView):
 
         area.on_enter.subscribe(_on_player_enter_area)
         area.on_exit.subscribe(_on_player_exit_area)
-        self.main_scene.add_sprite("area2", area.sprite)
+        self.area_scene.add_sprite("area2", area.sprite)
 
         return area
