@@ -20,9 +20,12 @@ class Player:
         self.keyboard.on_key_pressed.subscribe(self._on_key_pressed)
         self.keyboard.on_key_released.subscribe(self._on_key_released)
         self.mouse.on_mouse_motion.subscribe(self._on_mouse_motion)
+        self.body.helpers.activate_intereaction()
 
     
     def _on_key_pressed(self, key: int):
+        if key == arcade.key.E:
+            self.body.helpers.interact.execute()
         self._update_movement()
 
 

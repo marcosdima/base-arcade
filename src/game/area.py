@@ -1,6 +1,8 @@
 import arcade
 from pytiled_parser import Color
 from ..utils import Event
+from ..game.entities import Entity
+
 
 class Area:
     def __init__(self, x, y, width, height):
@@ -10,11 +12,9 @@ class Area:
         self.sprite.sync_hit_box_to_texture()
 
         self._inside = set()
-        self.on_enter: Event = Event()
-        self.on_exit: Event = Event()
-        self.on_enter.subscribe(fn=lambda s: print(f"Sprite {s} entered area"))
-        self.on_exit.subscribe(fn=lambda s: print(f"Sprite {s} exited area"))
-
+        self.on_enter = Event[[Entity]]()
+        self.on_exit = Event[[Entity]]()
+        
 
     def update(self, sprites: list):
         current_inside = set()

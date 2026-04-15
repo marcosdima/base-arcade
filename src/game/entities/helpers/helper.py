@@ -8,3 +8,8 @@ if TYPE_CHECKING:
 class Helper:
     def __init__(self, target: 'Entity'):
         self.target = target
+        self.setup()
+
+
+    def setup(self):
+        pass

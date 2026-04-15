@@ -1,4 +1,6 @@
 from typing import TYPE_CHECKING
+
+from .active import *
 from .default import *
 
 
@@ -11,6 +13,13 @@ class Helpers:
         self.owner = owner
         self._set_default_helpers()
 
+        # Active helpers.
+        self.interact: Interact = None
+
 
     def _set_default_helpers(self):
         self.movement = Movement(self.owner)
+
+
+    def activate_intereaction(self):
+        self.interact = Interact(self.owner)
