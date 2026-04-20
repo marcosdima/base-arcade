@@ -1,4 +1,5 @@
 from arcade import View, color
+import arcade
 from ..handlers import MouseHandler, KeyboardHandler
 
 class BaseView(View):
@@ -20,12 +21,25 @@ class BaseView(View):
 
     def on_mouse_press(self, x: int, y: int, button: int, modifiers: int):
         # Called when a mouse button is pressed.
-        pass
+        if button == arcade.MOUSE_BUTTON_LEFT:  # Left click
+            self.mouse_handler.on_left_click.trigger(x, y)
+        elif button == arcade.MOUSE_BUTTON_RIGHT:  # Right click
+            self.mouse_handler.on_right_click.trigger(x, y)
+        elif button == arcade.MOUSE_BUTTON_MIDDLE:  # Middle click
+            self.mouse_handler.on_middle_click.trigger(x, y)
 
 
     def on_mouse_release(self, x: int, y: int, button: int, modifiers: int):
         # Called when a mouse button is released.
         pass
+
+
+    def on_mouse_scroll(self, x: int, y: int, scroll_x: int, scroll_y: int):
+        # Called when the mouse wheel is scrolled.
+        if scroll_y > 0:  # Scroll up
+            self.mouse_handler.on_roll_up.trigger(x, y)
+        elif scroll_y < 0:  # Scroll down
+            self.mouse_handler.on_roll_down.trigger(x, y)
 
     
     def on_mouse_motion(self, x: int, y: int, dx: int, dy: int):

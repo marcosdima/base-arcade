@@ -1,4 +1,3 @@
-from arcade import color, Scene
 from ..base import BaseView
 from ...game import Entity, Player, Area, World, WorldTag
 from ...utils import Interaction
@@ -10,7 +9,6 @@ class GameView(BaseView):
 
         # Set world and area scene.
         self.world = World()
-        self.area_scene = Scene()
 
         # Test player and areas.
         self.player = Player(mouse=self.mouse_handler, keyboard=self.keyboard_handler)
@@ -32,19 +30,6 @@ class GameView(BaseView):
         # Called every frame to render the screen.
         self.clear()
         self.world.draw()
-        self.area_scene.draw()
-        self.world.entities[WorldTag.STATIC].draw_hit_boxes(color=color.RED, line_thickness=1)
-        self.world.entities[WorldTag.DYNAMIC].draw_hit_boxes(color=color.RED, line_thickness=1)
-
-        for sprite_list in self.world.entities.values():
-            for sprite in sprite_list:
-                if isinstance(sprite, Entity):
-                    sprite.draw_name()
-
-        for sprite_list in self.area_scene._sprite_lists:
-            for sprite in sprite_list:
-                if isinstance(sprite, Entity):
-                    sprite.draw_name()
 
 
     def on_update(self, delta_time: float):
@@ -81,7 +66,7 @@ class GameView(BaseView):
 
         area.on_enter.subscribe(_on_player_enter_area)
         area.on_exit.subscribe(_on_player_exit_area)
-        self.area_scene.add_sprite("area1", area.sprite)
+        self.world.add_area(area)
 
         return area
 
@@ -108,6 +93,6 @@ class GameView(BaseView):
 
         area.on_enter.subscribe(_on_player_enter_area)
         area.on_exit.subscribe(_on_player_exit_area)
-        self.area_scene.add_sprite("area2", area.sprite)
+        self.world.add_area(area)
 
         return area

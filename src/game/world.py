@@ -1,6 +1,7 @@
 from enum import Enum
-from arcade import SpriteList, PymunkPhysicsEngine
+from arcade import SpriteList, PymunkPhysicsEngine, color
 from .entities import Entity
+from .area import Area
 
 
 class WorldTag(Enum):
@@ -12,15 +13,21 @@ class WorldTag(Enum):
 
 class World:
     def __init__(self):
+        self.DEBUG_FLAG = True
+
         self.entities: dict[WorldTag, SpriteList] = {
             WorldTag.DEFAULT: SpriteList(),
             WorldTag.STATIC: SpriteList(),
             WorldTag.DYNAMIC: SpriteList(),
         }
-        self.physics = PymunkPhysicsEngine()
+        self.areas: list[Area] = []
 
         self._to_add = []
         self._to_remove = []
+        self._to_add_areas = []
+        self._to_remove_areas = []
+
+        self.physics = PymunkPhysicsEngine()
 
     
     def add_entity(self, entity: Entity):
@@ -33,11 +40,24 @@ class World:
         self._to_remove.append(entity)
 
     
+    def add_area(self, area: Area):
+        self._to_add_areas.append(area)    
+
+
+    def remove_area(self, area: Area):
+        if area not in self.areas:
+            return
+        self._to_remove_areas.append(area)
+
+
     def update(self, dt: float):
         self._flush()
 
         for group in self.entities.values():
             group.update(dt)
+
+        for area in self.areas:
+            area.update(self.entities[WorldTag.DYNAMIC])
 
         self.physics.step(dt)
 
@@ -47,6 +67,14 @@ class World:
     def draw(self):
         for group in self.entities.values():
             group.draw()
+
+        if self.DEBUG_FLAG:
+            for group in self.entities.values():
+                for sprite in group:
+                    sprite.draw_hit_box(color=color.RED, line_thickness=1)
+                    sprite.draw_name()
+            for area in self.areas:
+                area.sprite.draw_hit_box(color=color.BLUE, line_thickness=1)
 
 
     def _flush(self):
@@ -63,6 +91,17 @@ class World:
                     if e in group:
                         group.remove(e)
             self._to_remove.clear()
+
+        if self._to_add_areas:
+            for a in self._to_add_areas:
+                self.areas.append(a)
+            self._to_add_areas.clear()
+
+        if self._to_remove_areas:
+            for a in self._to_remove_areas:
+                if a in self.areas:
+                    self.areas.remove(a)
+            self._to_remove_areas.clear()
 
     
     def _add_entity_immediately(self, entity: Entity):

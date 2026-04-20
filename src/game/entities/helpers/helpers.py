@@ -22,5 +22,5 @@ class Helpers:
         self.tags = Tags(self.owner)
 
 
-    def activate_intereaction(self):
+    def activate_interact(self):
         self.interact = Interact(self.owner)

@@ -24,7 +24,16 @@ class Player:
         self.keyboard.on_key_pressed.subscribe(self._on_key_pressed)
         self.keyboard.on_key_released.subscribe(self._on_key_released)
         self.mouse.on_mouse_motion.subscribe(self._on_mouse_motion)
-        self.body.helpers.activate_intereaction()
+        
+        self.body.helpers.activate_interact()
+        self.mouse.on_roll_up.subscribe(
+            lambda x, y:
+                self.body.helpers.interact.next()
+        )
+        self.mouse.on_roll_down.subscribe(
+            lambda x, y:
+                self.body.helpers.interact.previous()
+        )
 
     
     def _on_key_pressed(self, key: int):
