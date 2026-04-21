@@ -31,21 +31,9 @@ class Entity(arcade.Sprite):
             outer_alpha=0,
         )
 
-        # Updates hitbox to match the specified size.
-        width, height = self.size
-        half_width = width / 2
-        half_height = height / 2
-        self.hit_box = arcade.hitbox.HitBox(
-            [
-                (-half_width, -half_height),
-                (half_width, -half_height),
-                (half_width, half_height),
-                (-half_width, half_height),
-            ]
-        )
-
         # Set helpers.
         self.helpers = Helpers(self)
+        self.helpers.hitbox.set_circle(radius=max(self.size), segments=32)
 
 
     def draw_name(self, font_size: int = 12):
