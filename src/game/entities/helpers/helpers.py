@@ -15,6 +15,7 @@ class Helpers:
 
         # Active helpers.
         self.interact: Interact = None
+        self.follow: Follow = None
         self.path: Path = None
 
 
@@ -26,6 +27,10 @@ class Helpers:
 
     def activate_interact(self):
         self.interact = Interact(self.owner)
+
+
+    def activate_follow(self):
+        self.follow = Follow(self.owner)
 
 
     def activate_path(self):

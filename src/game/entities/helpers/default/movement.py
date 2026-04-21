@@ -9,12 +9,7 @@ class Movement(Helper):
         self.speed: float = 10.0
 
 
-    def move(self, direction: tuple[float, float]):
-        # Check if physics is available. If not, use simple movement.
-        if not self.physics:
-            self._move_with_no_physics(direction)
-            return
-        
+    def move(self, direction: tuple[float, float], intensity: float = 100.0):
         dx, dy = direction
 
         length = math.hypot(dx, dy)
@@ -22,10 +17,14 @@ class Movement(Helper):
             dx /= length
             dy /= length
 
-        vx = dx * self.speed
-        vy = dy * self.speed
+        vx = dx * (self.speed / 100 * intensity)
+        vy = dy * (self.speed / 100 * intensity)
 
-        self.physics.set_velocity(self.target, (vx, vy))
+        if self.physics:
+            self.physics.set_velocity(self.target, (vx, vy))
+        else:
+            self.target.change_x = vx
+            self.target.change_y = vy
 
 
     def rotate(self, angle: float):
@@ -43,13 +42,3 @@ class Movement(Helper):
             self.target.change_y = 0
 
 
-    def _move_with_no_physics(self, direction: tuple[float, float]):
-        # Normalize movement to prevent faster diagonal movement.
-        move_x, move_y = direction
-        movement_length = math.hypot(move_x, move_y)
-        if movement_length > 0:
-            move_x /= movement_length
-            move_y /= movement_length
-        
-        self.target.change_x = move_x * self.speed
-        self.target.change_y = move_y * self.speed

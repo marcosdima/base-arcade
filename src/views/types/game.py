@@ -29,8 +29,9 @@ class GameView(BaseView):
         enemy.helpers.tags.add(WorldTag.DYNAMIC.value)
         self.world.add_entity(enemy)
         enemy.helpers.movement.speed = 100
-        enemy.helpers.activate_path()
-        enemy.helpers.path.go_to([(400, 400), (500, 400)])
+        enemy.helpers.movement.physics = self.world.physics
+        enemy.helpers.activate_follow()
+        enemy.helpers.follow.follow(self.player.body, distance=150)
 
         # Subscribe to pause menu event.
         self.keyboard_handler.on_escape_pressed.subscribe(self.go_to_pause_menu)
