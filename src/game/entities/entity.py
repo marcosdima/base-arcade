@@ -1,6 +1,7 @@
 import arcade
 from enum import Enum
 from .helpers import Helpers
+from ...utils import Event
 
 
 class EntityGroup(Enum):
@@ -30,10 +31,13 @@ class Entity(arcade.Sprite):
             center_alpha=0,
             outer_alpha=0,
         )
-
+        
         # Set helpers.
         self.helpers = Helpers(self)
         self.helpers.hitbox.set_circle(radius=max(self.size), segments=32)
+
+        # Event setup.
+        self.on_update = Event[[float]]()
 
 
     def draw_name(self, font_size: int = 12):
@@ -55,5 +59,10 @@ class Entity(arcade.Sprite):
         self._name_text.color = arcade.color.WHITE
         self._name_text.rotation = self.angle
         self._name_text.draw()
-    
+
+
+    def update(self, delta_time = 1 / 60, *args, **kwargs):
+        super().update(delta_time, *args, **kwargs)
+        self.on_update.trigger(delta_time)
+
     

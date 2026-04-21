@@ -15,6 +15,7 @@ class Helpers:
 
         # Active helpers.
         self.interact: Interact = None
+        self.path: Path = None
 
 
     def _set_default_helpers(self):
@@ -25,3 +26,7 @@ class Helpers:
 
     def activate_interact(self):
         self.interact = Interact(self.owner)
+
+
+    def activate_path(self):
+        self.path = Path(self.owner)

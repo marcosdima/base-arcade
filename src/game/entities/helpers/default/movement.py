@@ -6,12 +6,13 @@ from ..helper import Helper
 class Movement(Helper):
     def setup(self):
         self.physics: PymunkPhysicsEngine = None
+        self.speed: float = 10.0
 
 
-    def move(self, direction: tuple[float, float], speed: float):
+    def move(self, direction: tuple[float, float]):
         # Check if physics is available. If not, use simple movement.
         if not self.physics:
-            self._move_with_no_physics(direction, speed)
+            self._move_with_no_physics(direction)
             return
         
         dx, dy = direction
@@ -21,8 +22,8 @@ class Movement(Helper):
             dx /= length
             dy /= length
 
-        vx = dx * speed
-        vy = dy * speed
+        vx = dx * self.speed
+        vy = dy * self.speed
 
         self.physics.set_velocity(self.target, (vx, vy))
 
@@ -34,7 +35,15 @@ class Movement(Helper):
             self.target.angle = angle
 
 
-    def _move_with_no_physics(self, direction: tuple[float, float], speed: float):
+    def stop(self):
+        if self.physics:
+            self.physics.set_velocity(self.target, (0, 0))
+        else:
+            self.target.change_x = 0
+            self.target.change_y = 0
+
+
+    def _move_with_no_physics(self, direction: tuple[float, float]):
         # Normalize movement to prevent faster diagonal movement.
         move_x, move_y = direction
         movement_length = math.hypot(move_x, move_y)
@@ -42,5 +51,5 @@ class Movement(Helper):
             move_x /= movement_length
             move_y /= movement_length
         
-        self.target.change_x = move_x * speed
-        self.target.change_y = move_y * speed
+        self.target.change_x = move_x * self.speed
+        self.target.change_y = move_y * self.speed

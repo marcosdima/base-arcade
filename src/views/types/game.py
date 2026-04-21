@@ -12,15 +12,25 @@ class GameView(BaseView):
 
         # Test player and areas.
         self.player = Player(mouse=self.mouse_handler, keyboard=self.keyboard_handler)
+        self.player.body.center_x = 100
         self.player.body.helpers.tags.add(WorldTag.DYNAMIC.value)
         self.world.add_entity(self.player.body)
         self.area1 = self._setup_area_1()
         self.area2 = self._setup_area_2()
 
         # Collision tests.
-        obstacle1 = Entity('Obstacle1', (100, 100))
+        obstacle1 = Entity('Obstacle1', (50, 50))
+        obstacle1.center_x = 300
+        obstacle1.center_y = 500
         obstacle1.helpers.tags.add(WorldTag.STATIC.value)
         self.world.add_entity(obstacle1)
+
+        enemy = Entity('Enemy', (36, 36))
+        enemy.helpers.tags.add(WorldTag.DYNAMIC.value)
+        self.world.add_entity(enemy)
+        enemy.helpers.movement.speed = 100
+        enemy.helpers.activate_path()
+        enemy.helpers.path.go_to([(400, 400), (500, 400)])
 
         # Subscribe to pause menu event.
         self.keyboard_handler.on_escape_pressed.subscribe(self.go_to_pause_menu)

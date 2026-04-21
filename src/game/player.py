@@ -26,6 +26,7 @@ class Player:
         self.mouse.on_mouse_motion.subscribe(self._on_mouse_motion)
         
         self.body.helpers.activate_interact()
+        self.body.helpers.movement.speed = self.movement_speed
         self.mouse.on_roll_up.subscribe(
             lambda x, y:
                 self.body.helpers.interact.next()
@@ -64,7 +65,7 @@ class Player:
         if self.keyboard.is_pressed(move_right):
             move_x += 1
 
-        self.body.helpers.movement.move((move_x, move_y), self.movement_speed)
+        self.body.helpers.movement.move((move_x, move_y))
 
 
     def _on_mouse_motion(self, mouse_x: int, mouse_y: int, _dx: int, _dy: int):
