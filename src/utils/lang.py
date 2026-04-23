@@ -1,8 +1,7 @@
 import enum
-from gettext import translation
 import json
-
-from ..functions import Functions
+from .functions import Functions
+from .path import resource_path
 
 class Language(enum.Enum):
     ENGLISH = "en"
@@ -24,6 +23,7 @@ class Lang:
             return
         
         self._initialized = True
+        self.translations_path = resource_path("assets/lang")
         self.current_language = default_language if isinstance(default_language, Language) else Language(default_language)
         self.load_translations()
 
@@ -33,7 +33,7 @@ class Lang:
         for lang in Language:
             name = lang.value
             try:
-                with open(f"src/utils/lang/files/{name}.json", "r", encoding="utf-8") as f:
+                with open(f"{self.translations_path}/{name}.json", "r", encoding="utf-8") as f:
                     translation = json.load(f)
                     self.translations[lang] = translation
             except FileNotFoundError:
