@@ -2,6 +2,7 @@
     "main_menu": {
         "title": "Menú Principal",
         "start": "Comenzar",
+        "leaderboard": "Tabla de Clasificación",
         "quit": "Salir"
     },
     "pause": {
@@ -9,5 +10,11 @@
         "resume": "Reanudar",
         "main_menu": "Menú Principal",
         "settings": "Configuración"
+    },
+    "leaderboard": {
+        "title": "Tabla de Clasificación",
+        "main_menu": "Menú Principal",
+        "settings": "Configuración",
+        "resume": "Reanudar"
     }
 }

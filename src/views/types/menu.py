@@ -21,13 +21,16 @@ class MenuView(BaseView):
 
         w = self.window.width
         start_button = arcade.gui.UIFlatButton(text=Lang.get('main_menu.start'), width=int(w * 0.3))
+        leaderboard_button = arcade.gui.UIFlatButton(text=Lang.get('main_menu.leaderboard'), width=int(w * 0.3))
         quit_button = arcade.gui.UIFlatButton(text=Lang.get('main_menu.quit'), width=int(w * 0.3))
 
         start_button.on_click = self.on_click_start
+        leaderboard_button.on_click = self.on_click_leaderboard
         quit_button.on_click = self.on_click_quit
 
         vbox.add(title_label)
         vbox.add(start_button)
+        vbox.add(leaderboard_button)
         vbox.add(quit_button)
 
         anchor = arcade.gui.UIAnchorLayout()
@@ -47,6 +50,11 @@ class MenuView(BaseView):
     def on_click_start(self, event):
         from .game import GameView
         self.window.show_view(GameView())
+
+
+    def on_click_leaderboard(self, event):
+        from .leaderboard import LeaderboardView
+        self.window.show_view(LeaderboardView(comes_from=self))
 
 
     def on_click_quit(self, event):

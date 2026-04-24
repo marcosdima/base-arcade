@@ -2,6 +2,7 @@
     "main_menu": {
         "title": "Main Menu",
         "start": "Start",
+        "leaderboard": "Leaderboard",
         "quit": "Quit"
     },
     "pause": {
@@ -9,5 +10,11 @@
         "resume": "Resume",
         "main_menu": "Main Menu",
         "settings": "Settings"
+    },
+    "leaderboard": {
+        "title": "Leaderboard",
+        "main_menu": "Main Menu",
+        "settings": "Settings",
+        "resume": "Resume"
     }
 }

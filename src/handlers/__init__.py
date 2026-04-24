@@ -2,6 +2,7 @@ from .keybord import KeyboardHandler
 from .mouse import MouseHandler
 from .lang import Lang, Language
 from .config import Config, ConfigKey
+from .leaderboard import Leaderboard
 
 __all__ = [
     "KeyboardHandler",
@@ -10,4 +11,5 @@ __all__ = [
     "Language",
     "Config",
     "ConfigKey",
+    "Leaderboard",
 ]
