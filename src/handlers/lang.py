@@ -1,7 +1,7 @@
 import enum
 import json
-from .functions import Functions
-from .path import resource_path
+from ..utils.functions import Functions
+from ..utils.path import resource_path
 
 class Language(enum.Enum):
     ENGLISH = "en"

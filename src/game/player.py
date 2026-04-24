@@ -1,7 +1,6 @@
 import arcade
 import math
-from ..handlers import MouseHandler, KeyboardHandler
-from ..utils import Config, ConfigKey
+from ..handlers import MouseHandler, KeyboardHandler, Config, ConfigKey
 from .entities import Entity
 
 

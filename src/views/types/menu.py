@@ -1,7 +1,7 @@
 import arcade
 import arcade.gui
 from ..base import BaseView
-from ...utils import Lang
+from ...handlers import Lang
 
 
 class MenuView(BaseView):

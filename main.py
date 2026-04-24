@@ -1,7 +1,7 @@
 import arcade
 
 from src.views import MenuView
-from src.utils import Config, ConfigKey, Lang, Language
+from src.handlers import Config, ConfigKey, Lang
 
 config = Config()
 lang = Lang(default_language=Config.get(ConfigKey.LANGUAGE, 'en'))

@@ -1,7 +1,7 @@
 import json
 import enum
-from .event import Event
-from .path import resource_path
+from ..utils.event import Event
+from ..utils.path import resource_path
 
 
 class ConfigKey(enum.Enum):
