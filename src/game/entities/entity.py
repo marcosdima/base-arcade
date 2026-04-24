@@ -1,7 +1,7 @@
 import arcade
 from enum import Enum
 from .helpers import Helpers
-from ...utils import Event
+from ...engine import Event
 
 
 class EntityGroup(Enum):

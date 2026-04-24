@@ -1,5 +1,5 @@
 from ..helper import Helper
-from .....utils import Interaction
+from .....engine import Interaction
 
 
 class Interact(Helper):

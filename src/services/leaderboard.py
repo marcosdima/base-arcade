@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
-from ..utils.event import Event
-from ..utils.path import resource_path
+from ..engine.core.event import Event
+from ..engine import Functions
 
 
 class Leaderboard:
@@ -18,7 +18,7 @@ class Leaderboard:
         if getattr(self, "_initialized", False):
             return
         
-        self.leaderboard_file_path = resource_path("assets/leaderboard.json")
+        self.leaderboard_file_path = Functions.resource_path("assets/leaderboard.json")
         self._initialized = True
         self.load()
         self.score_added = Event[[str, int]]()

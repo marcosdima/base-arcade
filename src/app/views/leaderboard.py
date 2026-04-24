@@ -1,8 +1,7 @@
 import arcade
 import arcade.gui
-from ..base import BaseView
-from ...handlers import Lang, Leaderboard
-from ...utils import resource_path
+from ...engine import BaseView
+from ...services import Lang, Leaderboard
 
 
 class LeaderboardView(BaseView):
@@ -86,10 +85,6 @@ class LeaderboardView(BaseView):
         return scores_vbox
 
 
-    def on_hide_view(self):
-        self.ui.disable()
-
-
     def on_draw(self):
         self.clear()
         self.ui.draw()
@@ -98,11 +93,6 @@ class LeaderboardView(BaseView):
     def on_click_main_menu(self, event):
         from .menu import MenuView
         self.window.show_view(MenuView())
-
-
-    def on_click_settings(self, event):
-        # TODO: Replace with a dedicated settings view when implemented.
-        pass
 
 
     def on_click_resume(self, event):

@@ -1,7 +1,7 @@
 import enum
 import json
-from ..utils.functions import Functions
-from ..utils.path import resource_path
+from ..engine.core.functions import Functions
+from ..engine import Functions
 
 class Language(enum.Enum):
     ENGLISH = "en"
@@ -23,7 +23,7 @@ class Lang:
             return
         
         self._initialized = True
-        self.translations_path = resource_path("assets/lang")
+        self.translations_path = Functions.resource_path("assets/lang")
         self.current_language = default_language if isinstance(default_language, Language) else Language(default_language)
         self.load_translations()
 

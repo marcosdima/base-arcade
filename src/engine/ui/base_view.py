@@ -1,6 +1,6 @@
-from arcade import View, color
+from arcade import View
 import arcade
-from ..handlers import MouseHandler, KeyboardHandler
+from .. import MouseHandler, KeyboardHandler
 
 class BaseView(View):
     def __init__(self):
@@ -45,3 +45,4 @@ class BaseView(View):
     def on_mouse_motion(self, x: int, y: int, dx: int, dy: int):
         # Called when the mouse moves.
         self.mouse_handler.update_mouse(x, y, dx, dy)
+

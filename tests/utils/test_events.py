@@ -1,5 +1,5 @@
 import pytest
-from src.utils import Event
+from src.engine import Event
 
 
 @pytest.fixture

@@ -1,7 +1,7 @@
 import json
 import enum
-from ..utils.event import Event
-from ..utils.path import resource_path
+from ..engine.core.event import Event
+from ..engine import Functions
 
 
 class ConfigKey(enum.Enum):
@@ -35,7 +35,7 @@ class Config:
         if getattr(self, "_initialized", False):
             return
         
-        self.config_file_path = resource_path("assets/config.json")
+        self.config_file_path = Functions.resource_path("assets/config.json")
         self._initialized = True
         self.load()
         self.field_changed = Event[[ConfigKey, any]]()

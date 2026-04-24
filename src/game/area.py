@@ -1,7 +1,7 @@
 import arcade
 from pytiled_parser import Color
-from ..utils import Event
-from ..game.entities import Entity
+from ..engine import Event
+from .entities import Entity
 
 
 class Area:

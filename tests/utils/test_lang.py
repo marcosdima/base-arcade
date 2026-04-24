@@ -1,6 +1,5 @@
 import pytest
-
-from src.utils.lang.lang import Lang, Language
+from src.services import Lang, Language
 
 
 @pytest.fixture

@@ -1,7 +1,7 @@
 import arcade
 import arcade.gui
-from ..base import BaseView
-from ...handlers import Lang
+from ...engine import BaseView
+from ...services import Lang
 
 
 class PauseView(BaseView):

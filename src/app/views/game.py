@@ -1,6 +1,6 @@
-from ..base import BaseView
+from ...engine import BaseView
 from ...game import Entity, Player, Area, World, WorldTag
-from ...utils import Interaction
+from ...engine import Interaction
 
 
 class GameView(BaseView):

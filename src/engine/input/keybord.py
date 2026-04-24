@@ -1,5 +1,5 @@
 import arcade
-from ..utils import Event
+from .. import Event
 
 class KeyboardHandler:
 	def __init__(self):
