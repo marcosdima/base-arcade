@@ -1,19 +1,13 @@
 import arcade
 import arcade.gui
-from ...engine import BaseView
 from ...services import Lang
+from .app_view import AppView
 
 
-class MenuView(BaseView):
-    def __init__(self):
-        super().__init__()
-        self.ui = arcade.gui.UIManager()
-
-
+class MenuView(AppView):
     def on_show_view(self):
-        self.ui.enable()
-        self.ui.clear()
-
+        super().on_show_view()
+        
         arcade.set_background_color(arcade.color.BLACK)
 
         vbox = arcade.gui.UIBoxLayout(space_between=10)
@@ -24,8 +18,8 @@ class MenuView(BaseView):
         leaderboard_button = arcade.gui.UIFlatButton(text=Lang.get('main_menu.leaderboard'), width=int(w * 0.3))
         quit_button = arcade.gui.UIFlatButton(text=Lang.get('main_menu.quit'), width=int(w * 0.3))
 
-        start_button.on_click = self.on_click_start
-        leaderboard_button.on_click = self.on_click_leaderboard
+        start_button.on_click = lambda event: self.router.navigate("game")
+        leaderboard_button.on_click = lambda event: self.router.navigate("leaderboard")
         quit_button.on_click = self.on_click_quit
 
         vbox.add(title_label)
@@ -43,24 +37,8 @@ class MenuView(BaseView):
         self.ui.add(anchor)
 
 
-    def on_hide_view(self):
-        self.ui.disable()
-
-
-    def on_click_start(self, event):
-        from .game import GameView
-        self.window.show_view(GameView())
-
-
-    def on_click_leaderboard(self, event):
-        from .leaderboard import LeaderboardView
-        self.window.show_view(LeaderboardView(comes_from=self))
-
-
     def on_click_quit(self, event):
         arcade.close_window()
 
 
-    def on_draw(self):
-        self.clear()
-        self.ui.draw()
+    

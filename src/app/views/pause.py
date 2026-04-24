@@ -1,20 +1,18 @@
 import arcade
 import arcade.gui
-from ...engine import BaseView
 from ...services import Lang
+from .app_view import AppView
+from ..router import Router
 
 
-class PauseView(BaseView):
-    def __init__(self, comes_from: BaseView):
-        super().__init__()
-        self.comes_from = comes_from
-        self.ui = arcade.gui.UIManager()
+class PauseView(AppView):
+    def setup(self):
+        super().setup()
         self.keyboard_handler.on_escape_pressed.subscribe(self.return_to)
         
 
     def on_show_view(self):
-        self.ui.enable()
-        self.ui.clear()
+        super().on_show_view()
 
         arcade.set_background_color(arcade.color.DARK_BLUE_GRAY)
 
@@ -26,9 +24,9 @@ class PauseView(BaseView):
         settings_button = arcade.gui.UIFlatButton(text=Lang.get('pause.settings'), width=int(w * 0.3))
         resume_button = arcade.gui.UIFlatButton(text=Lang.get('pause.resume'), width=int(w * 0.3))
 
-        menu_button.on_click = self.on_click_main_menu
-        settings_button.on_click = self.on_click_settings
-        resume_button.on_click = self.on_click_resume
+        menu_button.on_click = lambda event: self.router.navigate("main_menu")
+        settings_button.on_click = lambda event: self.router.navigate("settings")
+        resume_button.on_click = lambda event: self.router.go_back()
 
         vbox.add(title_label)
         vbox.add(menu_button)
@@ -45,28 +43,5 @@ class PauseView(BaseView):
         self.ui.add(anchor)
 
 
-    def on_hide_view(self):
-        self.ui.disable()
-
-
-    def on_draw(self):
-        self.clear()
-        self.ui.draw()
-
-
-    def on_click_main_menu(self, event):
-        from .menu import MenuView
-        self.window.show_view(MenuView())
-
-
-    def on_click_settings(self, event):
-        # TODO: Replace with a dedicated settings view when implemented.
-        pass
-
-
-    def on_click_resume(self, event):
-        self.return_to()
-
-
     def return_to(self):
-        self.window.show_view(self.comes_from)
+        self.router.go_back()

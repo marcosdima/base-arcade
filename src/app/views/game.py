@@ -1,11 +1,11 @@
-from ...engine import BaseView
 from ...game import Entity, Player, Area, World, WorldTag
 from ...engine import Interaction
+from .app_view import AppView
 
 
-class GameView(BaseView):
-    def __init__(self):
-        super().__init__()
+class GameView(AppView):
+    def setup(self):
+        super().setup()
 
         # Set world and area scene.
         self.world = World()
@@ -34,7 +34,9 @@ class GameView(BaseView):
         enemy.helpers.follow.follow(self.player.body, distance=150)
 
         # Subscribe to pause menu event.
-        self.keyboard_handler.on_escape_pressed.subscribe(self.go_to_pause_menu)
+        self.keyboard_handler.on_escape_pressed.subscribe(
+            lambda: self.router.navigate("pause")
+        )
 
 
     def on_draw(self):
@@ -48,11 +50,6 @@ class GameView(BaseView):
         self.world.update(delta_time)
         self.area1.update([self.player.body])
         self.area2.update([self.player.body])
-
-
-    def go_to_pause_menu(self):
-        from .pause import PauseView
-        self.window.show_view(PauseView(self))
 
 
     def _setup_area_1(self):

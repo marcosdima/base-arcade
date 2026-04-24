@@ -1,22 +1,19 @@
 import arcade
 import arcade.gui
-from ...engine import BaseView
 from ...services import Lang, Leaderboard
+from .app_view import AppView
 
 
-class LeaderboardView(BaseView):
-    def __init__(self, comes_from: BaseView):
-        super().__init__()
-        self.comes_from = comes_from
-        self.ui = arcade.gui.UIManager()
-        self.keyboard_handler.on_escape_pressed.subscribe(self.return_to)
+class LeaderboardView(AppView):
+    def setup(self):
+        super().setup()
+        self.keyboard_handler.on_escape_pressed.subscribe(lambda: self.router.go_back())
         self.leaderboard = Leaderboard()
         
 
     def on_show_view(self):
-        self.ui.enable()
-        self.ui.clear()
-
+        super().on_show_view()
+        
         arcade.set_background_color(arcade.color.DARK_BLUE_GRAY)
 
         # Main vertical layout
@@ -38,9 +35,9 @@ class LeaderboardView(BaseView):
         settings_button = arcade.gui.UIFlatButton(text=Lang.get('leaderboard.settings'), width=int(w * 0.25))
         resume_button = arcade.gui.UIFlatButton(text=Lang.get('leaderboard.resume'), width=int(w * 0.25))
 
-        menu_button.on_click = self.on_click_main_menu
-        settings_button.on_click = self.on_click_settings
-        resume_button.on_click = self.on_click_resume
+        menu_button.on_click = lambda event: self.router.navigate("main_menu")
+        settings_button.on_click = lambda event: self.router.navigate("settings")
+        resume_button.on_click = lambda event: self.router.go_back()
 
         buttons_hbox.add(menu_button)
         buttons_hbox.add(settings_button)
@@ -59,7 +56,6 @@ class LeaderboardView(BaseView):
 
 
     def _create_scores_box(self) -> arcade.gui.UIWidget:
-        """Crea la caja que muestra la tabla de scores."""
         scores_vbox = arcade.gui.UIBoxLayout(space_between=8)
         
         # Scores
@@ -85,46 +81,6 @@ class LeaderboardView(BaseView):
         return scores_vbox
 
 
-    def on_draw(self):
-        self.clear()
-        self.ui.draw()
-
-
-    def on_click_main_menu(self, event):
-        from .menu import MenuView
-        self.window.show_view(MenuView())
-
-
-    def on_click_resume(self, event):
-        self.return_to()
-
-
-    def return_to(self):
-        self.window.show_view(self.comes_from)
-
-
-    def on_hide_view(self):
-        self.ui.disable()
-
-
-    def on_draw(self):
-        self.clear()
-        self.ui.draw()
-
-
-    def on_click_main_menu(self, event):
-        from .menu import MenuView
-        self.window.show_view(MenuView())
-
-
     def on_click_settings(self, event):
         # TODO: Replace with a dedicated settings view when implemented.
         pass
-
-
-    def on_click_resume(self, event):
-        self.return_to()
-
-
-    def return_to(self):
-        self.window.show_view(self.comes_from)

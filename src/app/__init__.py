@@ -1,3 +1,3 @@
-from .views import MenuView
+from .app import App
 
-__all__ = ['MenuView']
+__all__ = ['App']

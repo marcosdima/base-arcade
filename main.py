@@ -1,6 +1,6 @@
 import arcade
 
-from src.app import MenuView
+from src.app import App
 from src.services import Config, ConfigKey, Lang
 
 config = Config()
@@ -17,8 +17,7 @@ def main():
     config.field_changed.subscribe(on_config_change)
 
     # Show the menu.
-    menu = MenuView()
-    window.show_view(menu)
+    app = App(window)
     arcade.run()
 
 
