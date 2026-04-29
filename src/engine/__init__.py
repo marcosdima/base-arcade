@@ -3,7 +3,7 @@ from .core.functions import Functions
 from .core.interaction import Interaction
 
 
-from .input.keybord import KeyboardHandler
+from .input.key_board import KeyboardHandler
 from .input.mouse import MouseHandler
 
 
