@@ -1,22 +1,31 @@
 {
-"python-envs.pythonProjects": [
-{
-"path": ".",
-"envManager": "ms-python.python:venv",
-"packageManager": "ms-python.python:pip"
-}
-],
-"files.exclude": {
-"**/.venv": true,
-"**/.vscode": true,
-"**/**pycache**": true,
-"**/*.pyc": true,
-"**/.pytest_cache": true,
-},
-"python.testing.pytestArgs": [
-    "tests"
-],
-"python.testing.unittestEnabled": false,
-"python.testing.pytestEnabled": true
-}
+    "[python]": {
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.formatOnSave": true
+    },
+    "editor.codeActionsOnSave": {
+        "source.fixAll.ruff": "explicit"
+    },
+    "python-envs.pythonProjects": [
+        {
+            "path": ".",
+            "envManager": "ms-python.python:venv",
+            "packageManager": "ms-python.python:pip"
+        }
+    ],
 
+    // Hide folders and files that are not relevant to the project.
+    "files.exclude": {
+        "**/.venv": true,
+        "**/**pycache**": true,
+        "**/*.pyc": true,
+        "**/.pytest_cache": true,
+    },
+
+    // Testing.
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
+}

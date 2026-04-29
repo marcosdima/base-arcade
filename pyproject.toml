@@ -1,0 +1,13 @@
+[format]
+quote-style = "single"              # "single" | "double"
+indent-style = "space"              # "space" | "tab"
+indent-width = 4                    # Space indent width (default 4)
+line-ending = "auto"                # "auto" | "lf" | "cr-lf" | "native"
+magic-trailing-comma = true         # Respect trailing commas in multi-line constructs
+skip-magic-trailing-comma = false   # Skip formatting of trailing commas in multi-line constructs
+docstring-code-format = true        # Format code in docstrings (default true)
+
+[lint]
+select = ["E", "F", "W"]            # Select error codes to check (default "E,F,W")
+ignore = ["E501"]                   # Ignore specific error codes (default empty)
+line-length = 88                    # Maximum line length (default 88)
