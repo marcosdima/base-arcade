@@ -1,13 +1,110 @@
-[format]
-quote-style = "single"              # "single" | "double"
-indent-style = "space"              # "space" | "tab"
-indent-width = 4                    # Space indent width (default 4)
-line-ending = "auto"                # "auto" | "lf" | "cr-lf" | "native"
-magic-trailing-comma = true         # Respect trailing commas in multi-line constructs
-skip-magic-trailing-comma = false   # Skip formatting of trailing commas in multi-line constructs
-docstring-code-format = true        # Format code in docstrings (default true)
+[tool.ruff]
+# Max line length (like Black)
+line-length = 88
 
-[lint]
-select = ["E", "F", "W"]            # Select error codes to check (default "E,F,W")
-ignore = ["E501"]                   # Ignore specific error codes (default empty)
-line-length = 88                    # Maximum line length (default 88)
+# Target Python version (important for rules + formatting)
+target-version = "py311"
+
+# Files/directories to exclude
+exclude = [
+    ".venv",
+    "__pycache__",
+    "build",
+    "dist",
+    ".pytest_cache",
+]
+
+# Enable automatic fixing when possible (CLI mainly)
+fix = true
+
+
+# =========================
+# FORMATTER (ruff format)
+# =========================
+[tool.ruff.format]
+
+# Use single quotes where possible
+quote-style = "single"  # "single" | "double"
+
+# Use spaces for indentation
+indent-style = "space"  # "space" | "tab"
+
+# Line endings
+line-ending = "auto"  # "auto" | "lf" | "cr-lf" | "native"
+
+# Format code inside docstrings
+docstring-code-format = true
+
+
+# =========================
+# LINT RULES (ruff check)
+# =========================
+[tool.ruff.lint]
+
+# Enable rule sets:
+# E = pycodestyle errors
+# W = pycodestyle warnings
+# F = pyflakes (bugs)
+# I = import sorting (like isort)
+# B = bugbear (common bugs)
+# C4 = comprehensions improvements
+# UP = pyupgrade (modern Python)
+# SIM = simplifications
+# ARG = unused arguments
+# PERF = performance hints
+select = [
+    "E",
+    "W",
+    "F",
+    "I",
+    "B",
+    "C4",
+    "UP",
+    "SIM",
+    "ARG",
+    "PERF"
+]
+
+# Ignore specific rules
+ignore = [
+    "E501",   # line too long (handled by formatter)
+]
+
+# Automatically fix these rule categories
+fixable = ["ALL"]
+
+# Never auto-fix these (optional safety)
+unfixable = []
+
+# Allow unused variables starting with underscore
+dummy-variable-rgx = "^_+$"
+
+
+# =========================
+# IMPORTS (isort behavior)
+# =========================
+[tool.ruff.lint.isort]
+
+# Combine "as" imports
+combine-as-imports = true
+
+# Force sorting within sections
+force-sort-within-sections = true
+
+
+# =========================
+# PYLINT-LIKE TWEAKS
+# =========================
+[tool.ruff.lint.flake8-bugbear]
+
+# Allow mutable defaults warning tweak (optional)
+extend-immutable-calls = []
+
+
+# =========================
+# PYUPGRADE SETTINGS
+# =========================
+[tool.ruff.lint.pyupgrade]
+
+# Keep runtime typing (avoid breaking old code)
+keep-runtime-typing = true

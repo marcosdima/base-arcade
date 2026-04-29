@@ -1,5 +1,7 @@
-import arcade
 import math
+
+import arcade
+
 from ..helper import Helper
 
 
@@ -18,7 +20,6 @@ class Hitbox(Helper):
             ]
         )
 
-
     def set_triangle(self, size: tuple[int]):
         width, height = size
         half_width = width / 2
@@ -32,10 +33,9 @@ class Hitbox(Helper):
             ]
         )
 
-
     def set_circle(self, radius: float, segments: int = 16):
         if segments < 3:
-            raise ValueError("segments must be >= 3")
+            raise ValueError('segments must be >= 3')
 
         points = []
 

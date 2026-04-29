@@ -1,7 +1,7 @@
 import math
 from typing import TYPE_CHECKING
-from ..helper import Helper
 
+from ..helper import Helper
 
 if TYPE_CHECKING:
     from ...entity import Entity
@@ -12,7 +12,6 @@ class Follow(Helper):
         self.follow_target: Entity | None = None
         self.follow_distance: float = 0.0
         self.target.on_update.subscribe(self._on_update)
-
 
     def _on_update(self, dt: float):
         # No target to follow, so do nothing.
@@ -43,7 +42,6 @@ class Follow(Helper):
             return
 
         self.target.helpers.movement.move((delta_x, delta_y))
-
 
     def follow(self, entity: 'Entity', distance: float = 0.0):
         self.follow_target = entity

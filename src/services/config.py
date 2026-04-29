@@ -1,7 +1,8 @@
-import json
 import enum
-from ..engine.core.event import Event
+import json
+
 from ..engine import Functions
+from ..engine.core.event import Event
 
 
 class ConfigKey(enum.Enum):
@@ -13,7 +14,7 @@ class ConfigKey(enum.Enum):
     WINDOW_WIDTH = 'window-width'
     WINDOW_HEIGHT = 'window-height'
     BACKGROUND_COLOR = 'window-background_color'
-    
+
     # Input.
     MOVE_UP = 'input-movement-up'
     MOVE_DOWN = 'input-movement-down'
@@ -24,50 +25,44 @@ class ConfigKey(enum.Enum):
 class Config:
     _instance: 'Config' = None
 
-
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
         return cls._instance
 
-
     def __init__(self):
-        if getattr(self, "_initialized", False):
+        if getattr(self, '_initialized', False):
             return
-        
-        self.config_file_path = Functions.resource_path("assets/config.json")
+
+        self.config_file_path = Functions.resource_path('assets/config.json')
         self._initialized = True
         self.load()
         self.field_changed = Event[[ConfigKey, any]]()
-
 
     @classmethod
     def get(cls, key: ConfigKey, default=None):
         parsed_key = key.value.split('-')
         current = cls._instance.config
-        
+
         for part in parsed_key:
             if part in current:
                 current = current[part]
             else:
                 return default
-        
+
         return current
-    
 
     @classmethod
     def set(cls, key: ConfigKey, value):
         cls._instance.config[key.value] = value
         cls._instance.field_changed.trigger(key, value)
 
-
     @classmethod
     def save(cls):
         with open(cls._instance.config_file_path, 'w') as f:
             json.dump(cls._instance.config, f, indent=4)
 
-
     @classmethod
     def load(cls):
-        with open(cls._instance.config_file_path, 'r') as f:
+        with open(cls._instance.config_file_path) as f:
             cls._instance.config = json.load(f)

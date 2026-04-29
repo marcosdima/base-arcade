@@ -1,4 +1,5 @@
-from geometry import Rect, Point
+from geometry import Point, Rect
+
 from ....engine import MouseButton
 
 
@@ -8,12 +9,12 @@ class UIElement:
     def __init__(self, rect: Rect = Rect(), z_index: int = 0, name: str | None = None):
         self.rect = rect
         self.z_index = z_index
-        self.name = name if name is not None else f"{self.__class__.__name__}_{self.id}"
-        self.str = "A"
+        self.name = name if name is not None else f'{self.__class__.__name__}_{self.id}'
+        self.str = 'A'
 
         # Parent-child relationship.
-        self.parent: "UIElement" | None = None
-        self.children: list["UIElement"] = []
+        self.parent: UIElement | None = None
+        self.children: list[UIElement] = []
 
         # Flags.
         self.visible = False
@@ -30,7 +31,7 @@ class UIElement:
             return self.parent.global_position + self.rect.point
         return self.rect.point
 
-    def add_child(self, child: "UIElement"):
+    def add_child(self, child: 'UIElement'):
         child.set_parent(self)
         self.children.append(child)
 
@@ -54,26 +55,26 @@ class UIElement:
             child.draw()
 
     def update(self, dt: float):
-        self.__propagate_event("on_update", dt)
+        self.__propagate_event('on_update', dt)
 
     """ --- Mouse event handlers --- """
 
     def on_mouse_over(self, p: Point, dp: Point):
-        self.__propagate_event("on_mouse_in", p, dp)
+        self.__propagate_event('on_mouse_in', p, dp)
 
     def on_mouse_in(self, p: Point):
         self.__mouse_over = True
-        self.__propagate_event("on_mouse_over", p, Point(0, 0))
+        self.__propagate_event('on_mouse_over', p, Point(0, 0))
 
     def on_mouse_out(self, p: Point):
         self.__mouse_over = False
-        self.__propagate_event("on_mouse_out", p)
+        self.__propagate_event('on_mouse_out', p)
 
     def on_mouse_press(self, p: Point, button: MouseButton, modifiers):
-        self.__propagate_event("on_mouse_press", p, button, modifiers)
+        self.__propagate_event('on_mouse_press', p, button, modifiers)
 
     def on_mouse_release(self, p: Point, button: MouseButton, modifiers):
-        self.__propagate_event("on_mouse_release", p, button, modifiers)
+        self.__propagate_event('on_mouse_release', p, button, modifiers)
 
     def __propagate_event(self, event_name: str, *args, **kwargs):
         handler = getattr(self, event_name, None)

@@ -1,5 +1,6 @@
-from .views import *
 from .router import Router
+from .views import GameView, LeaderboardView, MenuView, PauseView
+
 
 class App:
     def __init__(self, window):
@@ -13,13 +14,10 @@ class App:
         self.router = Router(
             window=self.window,
             routes={
-                "main_menu": lambda: self.main_menu_view,
-                "pause": PauseView,
-                "leaderboard": LeaderboardView,
-                "game": lambda: self.game_view,
+                'main_menu': lambda: self.main_menu_view,
+                'pause': PauseView,
+                'leaderboard': LeaderboardView,
+                'game': lambda: self.game_view,
             },
-            initial="main_menu"
+            initial='main_menu',
         )
-
-
-        

@@ -1,5 +1,6 @@
 import arcade
 from pytiled_parser import Color
+
 from ..engine import Event
 from .entities import Entity
 
@@ -14,7 +15,6 @@ class Area:
         self._inside = set()
         self.on_enter = Event[[Entity]]()
         self.on_exit = Event[[Entity]]()
-        
 
     def update(self, sprites: list):
         current_inside = set()

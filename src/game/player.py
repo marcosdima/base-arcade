@@ -1,11 +1,13 @@
-import arcade
 import math
+
+import arcade
+
+from ..engine import KeyboardHandler, MouseHandler
 from ..services import Config, ConfigKey
-from ..engine import MouseHandler, KeyboardHandler
 from .entities import Entity
 
 
-class Player: 
+class Player:
     def __init__(
         self,
         mouse: MouseHandler,
@@ -24,28 +26,21 @@ class Player:
         self.keyboard.on_key_pressed.subscribe(self._on_key_pressed)
         self.keyboard.on_key_released.subscribe(self._on_key_released)
         self.mouse.on_mouse_motion.subscribe(self._on_mouse_motion)
-        
+
         self.body.helpers.activate_interact()
         self.body.helpers.movement.speed = self.movement_speed
-        self.mouse.on_roll_up.subscribe(
-            lambda x, y:
-                self.body.helpers.interact.next()
-        )
+        self.mouse.on_roll_up.subscribe(lambda x, y: self.body.helpers.interact.next())
         self.mouse.on_roll_down.subscribe(
-            lambda x, y:
-                self.body.helpers.interact.previous()
+            lambda x, y: self.body.helpers.interact.previous()
         )
 
-    
     def _on_key_pressed(self, key: int):
         if key == arcade.key.E:
             self.body.helpers.interact.execute()
         self._update_movement()
 
-
     def _on_key_released(self, key: int):
         self._update_movement()
-
 
     def _update_movement(self):
         # Get key codes for movement keys from config. TODO: Config event changes to update these dynamically.
@@ -66,7 +61,6 @@ class Player:
             move_x += 1
 
         self.body.helpers.movement.move((move_x, move_y))
-
 
     def _on_mouse_motion(self, mouse_x: int, mouse_y: int, _dx: int, _dy: int):
         # Get mouse direction, towards which the player should look.

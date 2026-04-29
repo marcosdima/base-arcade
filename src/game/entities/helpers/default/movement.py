@@ -1,5 +1,7 @@
 import math
+
 from arcade import PymunkPhysicsEngine
+
 from ..helper import Helper
 
 
@@ -7,7 +9,6 @@ class Movement(Helper):
     def setup(self):
         self.physics: PymunkPhysicsEngine = None
         self.speed: float = 10.0
-
 
     def move(self, direction: tuple[float, float], intensity: float = 100.0):
         dx, dy = direction
@@ -26,13 +27,11 @@ class Movement(Helper):
             self.target.change_x = vx
             self.target.change_y = vy
 
-
     def rotate(self, angle: float):
         if self.physics:
             self.physics.set_rotation(self.target, -angle)
         else:
             self.target.angle = angle
-
 
     def stop(self):
         if self.physics:
@@ -40,5 +39,3 @@ class Movement(Helper):
         else:
             self.target.change_x = 0
             self.target.change_y = 0
-
-

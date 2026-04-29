@@ -1,5 +1,5 @@
-from ...game import Entity, Player, Area, World, WorldTag
 from ...engine import Interaction
+from ...game import Area, Entity, Player, World, WorldTag
 from .app_view import AppView
 
 
@@ -35,15 +35,13 @@ class GameView(AppView):
 
         # Subscribe to pause menu event.
         self.keyboard_handler.on_escape_pressed.subscribe(
-            lambda: self.router.navigate("pause")
+            lambda: self.router.navigate('pause')
         )
-
 
     def on_draw(self):
         # Called every frame to render the screen.
         self.clear()
         self.world.draw()
-
 
     def on_update(self, delta_time: float):
         # Called every frame to update game logic.
@@ -51,15 +49,14 @@ class GameView(AppView):
         self.area1.update([self.player.body])
         self.area2.update([self.player.body])
 
-
     def _setup_area_1(self):
         area = Area(x=300, y=300, width=200, height=200)
         interaction = Interaction(
-            name="Test Interaction",
-            action=lambda: print("Interaction 1 executed!"),
+            name='Test Interaction',
+            action=lambda: print('Interaction 1 executed!'),
             priority=1,
-            on_focus=lambda: print("Interaction 1 focused!"),
-            on_blur=lambda: print("Interaction 1 blurred!")
+            on_focus=lambda: print('Interaction 1 focused!'),
+            on_blur=lambda: print('Interaction 1 blurred!'),
         )
 
         def _on_player_enter_area(player_body: Entity):
@@ -78,15 +75,14 @@ class GameView(AppView):
 
         return area
 
-
     def _setup_area_2(self):
         area = Area(x=400, y=300, width=200, height=200)
         interaction = Interaction(
-            name="Test Interaction",
-            action=lambda: print("Interaction 2 executed!"),
+            name='Test Interaction',
+            action=lambda: print('Interaction 2 executed!'),
             priority=1,
-            on_focus=lambda: print("Interaction 2 focused!"),
-            on_blur=lambda: print("Interaction 2 blurred!")
+            on_focus=lambda: print('Interaction 2 focused!'),
+            on_blur=lambda: print('Interaction 2 blurred!'),
         )
 
         def _on_player_enter_area(player_body: Entity):

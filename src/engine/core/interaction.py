@@ -1,4 +1,4 @@
-from typing import Callable
+from collections.abc import Callable
 
 
 class Interaction:
@@ -17,15 +17,12 @@ class Interaction:
         self.on_focus = on_focus
         self.on_blur = on_blur
 
-
     def execute(self):
         self.action()
-
 
     def focus(self):
         if self.on_focus:
             self.on_focus()
-
 
     def blur(self):
         if self.on_blur:

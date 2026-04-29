@@ -1,7 +1,9 @@
-import arcade
 from enum import Enum
-from .helpers import Helpers
+
+import arcade
+
 from ...engine import Event
+from .helpers import Helpers
 
 
 class EntityGroup(Enum):
@@ -10,14 +12,15 @@ class EntityGroup(Enum):
 
 
 class Entity(arcade.Sprite):
-    '''Base class for all entities in the game.'''
+    """Base class for all entities in the game."""
+
     def __init__(
         self,
-        name: str = "Entity",
+        name: str = 'Entity',
         size: tuple[int] = (32, 32),
     ):
         super().__init__()
-        
+
         self.name = name
         self.size = size
         self._name_text = None
@@ -31,14 +34,13 @@ class Entity(arcade.Sprite):
             center_alpha=0,
             outer_alpha=0,
         )
-        
+
         # Set helpers.
         self.helpers = Helpers(self)
         self.helpers.hitbox.set_circle(radius=max(self.size), segments=32)
 
         # Event setup.
         self.on_update = Event[[float]]()
-
 
     def draw_name(self, font_size: int = 12):
         if self._name_text is None or self._name_text_font_size != font_size:
@@ -48,8 +50,8 @@ class Entity(arcade.Sprite):
                 y=self.center_y,
                 color=arcade.color.WHITE,
                 font_size=font_size,
-                anchor_x="center",
-                anchor_y="center",
+                anchor_x='center',
+                anchor_y='center',
             )
             self._name_text_font_size = font_size
 
@@ -60,9 +62,6 @@ class Entity(arcade.Sprite):
         self._name_text.rotation = self.angle
         self._name_text.draw()
 
-
-    def update(self, delta_time = 1 / 60, *args, **kwargs):
+    def update(self, delta_time=1 / 60, *args, **kwargs):
         super().update(delta_time, *args, **kwargs)
         self.on_update.trigger(delta_time)
-
-    

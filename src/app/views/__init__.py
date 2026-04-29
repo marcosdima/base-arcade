@@ -1,11 +1,11 @@
 from .game import GameView
+from .leaderboard import LeaderboardView
 from .menu import MenuView
 from .pause import PauseView
-from .leaderboard import LeaderboardView
 
 __all__ = [
-    "GameView",
-    "MenuView",
-    "PauseView",
-    "LeaderboardView",
+    'GameView',
+    'MenuView',
+    'PauseView',
+    'LeaderboardView',
 ]

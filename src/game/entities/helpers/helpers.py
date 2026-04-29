@@ -3,7 +3,6 @@ from typing import TYPE_CHECKING
 from .active import *
 from .default import *
 
-
 if TYPE_CHECKING:
     from ..entity import Entity
 
@@ -18,20 +17,16 @@ class Helpers:
         self.follow: Follow = None
         self.path: Path = None
 
-
     def _set_default_helpers(self):
         self.movement = Movement(self.owner)
         self.tags = Tags(self.owner)
         self.hitbox = Hitbox(self.owner)
 
-
     def activate_interact(self):
         self.interact = Interact(self.owner)
 
-
     def activate_follow(self):
         self.follow = Follow(self.owner)
-
 
     def activate_path(self):
         self.path = Path(self.owner)

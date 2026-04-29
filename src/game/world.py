@@ -1,14 +1,17 @@
 from enum import Enum
-from arcade import SpriteList, PymunkPhysicsEngine, color
-from .entities import Entity
+
+from arcade import PymunkPhysicsEngine, SpriteList, color
+
 from .area import Area
+from .entities import Entity
 
 
 class WorldTag(Enum):
     """Tags for categorizing entities in the world."""
-    DEFAULT = "default"
-    STATIC = "static"
-    DYNAMIC = "dynamic"
+
+    DEFAULT = 'default'
+    STATIC = 'static'
+    DYNAMIC = 'dynamic'
 
 
 class World:
@@ -29,26 +32,21 @@ class World:
 
         self.physics = PymunkPhysicsEngine()
 
-    
     def add_entity(self, entity: Entity):
         self._to_add.append(entity)
-
 
     def remove_entity(self, entity: Entity):
         if not any(entity in group for group in self.entities.values()):
             return
         self._to_remove.append(entity)
 
-    
     def add_area(self, area: Area):
-        self._to_add_areas.append(area)    
-
+        self._to_add_areas.append(area)
 
     def remove_area(self, area: Area):
         if area not in self.areas:
             return
         self._to_remove_areas.append(area)
-
 
     def update(self, dt: float):
         self._flush()
@@ -63,7 +61,6 @@ class World:
 
         self._flush()
 
-
     def draw(self):
         for group in self.entities.values():
             group.draw()
@@ -75,7 +72,6 @@ class World:
                     sprite.draw_name()
             for area in self.areas:
                 area.sprite.draw_hit_box(color=color.BLUE, line_thickness=1)
-
 
     def _flush(self):
         if self._to_add:
@@ -103,7 +99,6 @@ class World:
                     self.areas.remove(a)
             self._to_remove_areas.clear()
 
-    
     def _add_entity_immediately(self, entity: Entity):
         entity.helpers.movement.physics = self.physics
         if entity.helpers.tags.has(WorldTag.STATIC.value):
@@ -119,7 +114,7 @@ class World:
                 mass=1,
                 friction=0.5,
                 body_type=PymunkPhysicsEngine.DYNAMIC,
-                moment_of_inertia=PymunkPhysicsEngine.MOMENT_INF
+                moment_of_inertia=PymunkPhysicsEngine.MOMENT_INF,
             )
         else:
             self.entities[WorldTag.DEFAULT].append(entity)

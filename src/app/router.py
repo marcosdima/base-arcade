@@ -1,6 +1,5 @@
 from ..engine import BaseView
 
-
 type ViewFactory = callable[[], BaseView]
 
 
@@ -25,7 +24,6 @@ class Router:
 
         self.navigate(initial)
 
-
     def _create_view(self, name: str):
         if name not in self.routes:
             raise ValueError(f"Route '{name}' not found")
@@ -34,11 +32,10 @@ class Router:
         view = factory()
 
         # TODO: This is a bit hacky, but it allows us to inject the router into views that need it without forcing all views to have a router attribute passed in the constructor. We can improve this later by using a more robust dependency injection system.
-        if hasattr(view, "router"):
+        if hasattr(view, 'router'):
             view.router = self
 
         return view
-
 
     def navigate(self, name: str):
         view = self._create_view(name)
@@ -48,7 +45,6 @@ class Router:
 
         self.window.show_view(view)
 
-
     def go_back(self):
         if len(self._stack) <= 1:
             return
@@ -56,7 +52,6 @@ class Router:
         self._stack.pop()
         previous = self._stack[-1]
         self.window.show_view(previous)
-
 
     def reset(self, name: str):
         """Clear stack and go to view"""

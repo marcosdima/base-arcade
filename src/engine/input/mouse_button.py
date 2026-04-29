@@ -1,5 +1,6 @@
-import arcade
 from enum import Enum
+
+import arcade
 
 
 class MouseButton(Enum):

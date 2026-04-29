@@ -6,9 +6,8 @@ from ..helper import Helper
 class Path(Helper):
     def setup(self):
         self.path_points: list[tuple[int, int]] = []
-        self.path_to: (tuple[int, int] | None) = None
+        self.path_to: tuple[int, int] | None = None
         self.target.on_update.subscribe(self._on_update)
-
 
     def _on_update(self, dt: float):
         # No path to follow, so do nothing.
@@ -38,7 +37,6 @@ class Path(Helper):
 
         self.target.helpers.movement.move((delta_x, delta_y))
 
-
     def go_to(self, route: list[tuple[int, int]] | tuple[int, int]):
         # Clear any existing path points.
         self.path_points.clear()
@@ -51,8 +49,3 @@ class Path(Helper):
             self.path_to = route
 
         self.target.helpers.movement.move(self.path_to)
-
-
-    
-
-  

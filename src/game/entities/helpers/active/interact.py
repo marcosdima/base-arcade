@@ -1,5 +1,5 @@
-from ..helper import Helper
 from .....engine import Interaction
+from ..helper import Helper
 
 
 class Interact(Helper):
@@ -8,7 +8,6 @@ class Interact(Helper):
 
         self.interactions: list[Interaction] = []
         self._current: Interaction | None = None
-
 
     def add(self, interaction: Interaction):
         # Prevent duplicates.
@@ -22,7 +21,6 @@ class Interact(Helper):
         # If there is no current interaction yet, set the highest priority one.
         if self._current is None:
             self._set_current(self.interactions[0])
-
 
     def remove(self, interaction: Interaction):
         # Ignore if the interaction is not in the list.
@@ -40,38 +38,35 @@ class Interact(Helper):
             else:
                 self._set_current(self.interactions[0])
 
-
-
     def clear(self):
         self._set_current(None)
         self.interactions.clear()
-
 
     def next(self):
         if not self.interactions:
             return
 
         current_index = self.interactions.index(self._current)
-        self._set_current(self.interactions[(current_index + 1) % len(self.interactions)])
-
+        self._set_current(
+            self.interactions[(current_index + 1) % len(self.interactions)]
+        )
 
     def previous(self):
         if not self.interactions:
             return
 
         current_index = self.interactions.index(self._current)
-        self._set_current(self.interactions[(current_index - 1) % len(self.interactions)])
-
+        self._set_current(
+            self.interactions[(current_index - 1) % len(self.interactions)]
+        )
 
     def execute(self):
         current = self.current()
         if current:
             current.execute()
 
-
     def _sort(self):
         self.interactions.sort(key=lambda i: i.priority, reverse=True)
-
 
     def _set_current(self, interaction: Interaction | None):
         if interaction is self._current:
@@ -84,7 +79,6 @@ class Interact(Helper):
 
         if self._current:
             self._current.focus()
-
 
     def current(self) -> Interaction | None:
         if not self.interactions:

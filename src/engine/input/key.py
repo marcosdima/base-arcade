@@ -1,5 +1,7 @@
-import arcade
 from enum import Enum
+
+import arcade
+
 
 class Key(Enum):
     # Letter keys.
