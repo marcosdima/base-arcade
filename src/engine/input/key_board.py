@@ -1,5 +1,6 @@
 import arcade
 from .. import Event
+from .key import Key
 
 class KeyboardHandler:
 	def __init__(self):
@@ -16,7 +17,7 @@ class KeyboardHandler:
 	def key_pressed(self, key: int):
 		self.keys[key] = True
 		self.on_key_pressed.trigger(key)
-		if key == arcade.key.ESCAPE:
+		if key == Key.ESCAPE:
 			self.on_escape_pressed.trigger()
 		
 
@@ -26,7 +27,7 @@ class KeyboardHandler:
 
 
 	def str_key_to_int(self, key_str: str) -> int | None:
-		return getattr(arcade.key, key_str.upper(), None)
+		return getattr(Key, key_str.upper(), None)
 
 
 	def is_pressed(self, key: int | str) -> bool:
