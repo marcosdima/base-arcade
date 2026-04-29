@@ -1,4 +1,4 @@
-from .. import Event
+from ..core import Event
 from .key import Key
 
 
