@@ -3,7 +3,7 @@
 line-length = 88
 
 # Target Python version (important for rules + formatting)
-target-version = "py311"
+target-version = "py312"
 
 # Files/directories to exclude
 exclude = [
