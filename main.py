@@ -17,7 +17,7 @@ def main():
     # Subscribe to config changes to update the window when necessary.
     config.field_changed.subscribe(on_config_change)
 
-    # Show the menu.
+    # Initialize the application.
     app = App(window)
     arcade.run()
 
