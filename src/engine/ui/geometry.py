@@ -75,6 +75,22 @@ class Rect:
     def center_y(self) -> float:
         return self.y + self.height / 2
 
+    @property
+    def left(self) -> float:
+        return self.x
+
+    @property
+    def right(self) -> float:
+        return self.x + self.width
+
+    @property
+    def bottom(self) -> float:
+        return self.y
+
+    @property
+    def top(self) -> float:
+        return self.y + self.height
+
     def contains(self, point: Point | tuple) -> bool:
         if isinstance(point, Point):
             return (self.x <= point.x <= self.x + self.width) and (

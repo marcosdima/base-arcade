@@ -73,13 +73,20 @@ def test_point_parsing_invalid():
 
 
 def test_rect_properties():
-    rect = Rect(Point(1, 2), width=4, height=6)
+    x, y, width, height = 1, 2, 4, 6
+    rect = Rect(Point(x, y), width=width, height=height)
 
-    assert rect.x == 1, 'Rect x property failed.'
-    assert rect.y == 2, 'Rect y property failed.'
-    assert rect.center_x == 3, 'Rect center_x property failed.'
-    assert rect.center_y == 5, 'Rect center_y property failed.'
-    assert rect.center.x == 3 and rect.center.y == 5, 'Rect center property failed.'
+    assert rect.x == x, 'Rect x property failed.'
+    assert rect.y == y + height, 'Rect y property failed.'
+    assert rect.center_x == x + width / 2, 'Rect center_x property failed.'
+    assert rect.center_y == y + height / 2, 'Rect center_y property failed.'
+    assert rect.center.x == x + width / 2 and rect.center.y == y + height / 2, (
+        'Rect center property failed.'
+    )
+    assert rect.top == y + height, 'Rect top property failed.'
+    assert rect.bottom == y, 'Rect bottom property failed.'
+    assert rect.right == x + width, 'Rect right property failed.'
+    assert rect.left == x, 'Rect left property failed.'
 
 
 def test_rect_contains():
