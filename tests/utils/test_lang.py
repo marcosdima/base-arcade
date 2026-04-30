@@ -35,7 +35,6 @@ def test_check_structure_returns_report_with_keys_per_language(lang_instance: La
     }
 
     report = lang_instance.check_structure()
-    print(f'Report: {report}')
 
     assert report[Language.ENGLISH] == []
     assert report[Language.SPANISH] == []
