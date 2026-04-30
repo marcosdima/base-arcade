@@ -10,22 +10,19 @@ class MenuView(BaseView):
 
         print('Showing menu view')
 
-        # Set button properties.
-        quit_button_props = ButtonProps(
-            text='Quit',
-            on_click=self.on_click_quit,
-        )
-
         # Create quit button.
-        print(self.window.width, self.window.height)
         quit_button = Button(
             props=UIElementProps(
                 rect=(self.window.width / 2, self.window.height / 2, 100, 50),
                 name='quit_button',
+                debug=True,
             ),
-            button_props=quit_button_props,
+            button_props=ButtonProps(
+                text='Quit',
+                on_click=self.on_click_quit,
+            ),
         )
         self.root.add_child(quit_button)
 
-    def on_click_quit(self, event):
+    def on_click_quit(self):
         arcade.close_window()
