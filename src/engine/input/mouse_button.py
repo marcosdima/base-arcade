@@ -4,8 +4,6 @@ import arcade
 
 
 class MouseButton(Enum):
-    LEFT = arcade.mouse.LEFT
-    RIGHT = arcade.mouse.RIGHT
-    MIDDLE = arcade.mouse.MIDDLE
-    BUTTON_4 = arcade.mouse.BUTTON_4
-    BUTTON_5 = arcade.mouse.BUTTON_5
+    LEFT = arcade.MOUSE_BUTTON_LEFT
+    RIGHT = arcade.MOUSE_BUTTON_RIGHT
+    MIDDLE = arcade.MOUSE_BUTTON_MIDDLE
