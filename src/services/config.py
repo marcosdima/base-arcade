@@ -1,8 +1,7 @@
 import enum
 import json
 
-from ..engine import Functions
-from ..engine.core.event import Event
+from ..engine.core import Event, Functions
 
 
 class ConfigKey(enum.Enum):

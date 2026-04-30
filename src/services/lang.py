@@ -1,8 +1,7 @@
 import enum
 import json
 
-from ..engine import Functions
-from ..engine.core.functions import Functions
+from ..engine.core import Functions
 
 
 class Language(enum.Enum):
