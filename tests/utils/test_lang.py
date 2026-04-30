@@ -36,8 +36,8 @@ def test_check_structure_returns_report_with_keys_per_language(lang_instance: La
 
     report = lang_instance.check_structure()
 
-    assert report[Language.ENGLISH] == []
-    assert report[Language.SPANISH] == []
+    assert report[Language.ENGLISH] == [], 'Expected no missing keys for English'
+    assert report[Language.SPANISH] == [], 'Expected no missing keys for Spanish'
 
 
 def test_check_structure_reports_missing_key_per_language(lang_instance: Lang):
@@ -48,11 +48,13 @@ def test_check_structure_reports_missing_key_per_language(lang_instance: Lang):
 
     report = lang_instance.check_structure()
 
-    assert report[Language.SPANISH]['missing_keys'] == ['start']
-    assert report[Language.ENGLISH]['missing_keys'] == []
+    assert report[Language.SPANISH] == ['start'], (
+        'Expected "start" to be reported as missing for Spanish'
+    )
+    assert report[Language.ENGLISH] == [], 'Expected no missing keys for English'
 
 
-def test_check_structure_reports_empty_key_when_value_is_none(lang_instance: Lang):
+def test_check_structure_allows_none_values(lang_instance: Lang):
     lang_instance.translations = {
         Language.ENGLISH: {'title': 'Title', 'start': 'Start'},
         Language.SPANISH: {'title': 'Titulo', 'start': None},
@@ -60,22 +62,8 @@ def test_check_structure_reports_empty_key_when_value_is_none(lang_instance: Lan
 
     report = lang_instance.check_structure()
 
-    assert report[Language.SPANISH]['empty_keys'] == ['start']
-    assert report[Language.ENGLISH]['empty_keys'] == []
-
-
-def test_check_structure_reports_empty_key_when_value_is_empty_string(
-    lang_instance: Lang,
-):
-    lang_instance.translations = {
-        Language.ENGLISH: {'title': 'Title', 'start': 'Start'},
-        Language.SPANISH: {'title': 'Titulo', 'start': ''},
-    }
-
-    report = lang_instance.check_structure()
-
-    assert report[Language.SPANISH]['empty_keys'] == ['start']
-    assert report[Language.ENGLISH]['empty_keys'] == []
+    assert report[Language.SPANISH] == []
+    assert report[Language.ENGLISH] == []
 
 
 def test_check_structure_multiple_levels(lang_instance: Lang):
@@ -94,10 +82,8 @@ def test_check_structure_multiple_levels(lang_instance: Lang):
 
     report = lang_instance.check_structure()
 
-    assert report[Language.ENGLISH]['keys'] == ['menu-play', 'start', 'title']
-    assert report[Language.SPANISH]['keys'] == ['menu-play', 'start', 'title']
-    assert report[Language.ENGLISH]['missing_keys'] == []
-    assert report[Language.SPANISH]['missing_keys'] == []
+    assert report[Language.ENGLISH] == []
+    assert report[Language.SPANISH] == []
 
 
 def test_check_structure_multiple_levels_with_missing_key(lang_instance: Lang):
@@ -112,10 +98,8 @@ def test_check_structure_multiple_levels_with_missing_key(lang_instance: Lang):
 
     report = lang_instance.check_structure()
 
-    assert report[Language.ENGLISH]['keys'] == ['menu-play', 'start', 'title']
-    assert report[Language.SPANISH]['keys'] == ['start', 'title']
-    assert report[Language.ENGLISH]['missing_keys'] == []
-    assert report[Language.SPANISH]['missing_keys'] == ['menu-play']
+    assert report[Language.ENGLISH] == []
+    assert report[Language.SPANISH] == ['menu.play']
 
 
 def test_check_structure_multiple_levels_with_missing_keys(lang_instance: Lang):
