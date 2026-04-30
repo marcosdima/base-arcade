@@ -64,16 +64,16 @@ class Rect:
         return self.point.y
 
     @property
-    def center(self) -> Point:
-        return Point(self.center_x, self.center_y)
-
-    @property
     def center_x(self) -> float:
         return self.x + self.width / 2
 
     @property
     def center_y(self) -> float:
         return self.y + self.height / 2
+
+    @property
+    def center(self) -> Point:
+        return Point(self.center_x, self.center_y)
 
     @property
     def left(self) -> float:
@@ -106,14 +106,14 @@ class Rect:
 
     def as_arcade_rect(self) -> ArcadeRect:
         return ArcadeRect(
-            x=self.x,
-            y=self.y,
+            x=self.center_x,
+            y=self.center_y,
             width=self.width,
             height=self.height,
             left=self.x,
-            right=self.x + self.width,
-            bottom=self.y,
-            top=self.y + self.height,
+            right=self.right,
+            bottom=self.bottom,
+            top=self.top,
         )
 
     def clone(self) -> 'Rect':

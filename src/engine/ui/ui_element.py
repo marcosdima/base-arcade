@@ -50,13 +50,13 @@ class UIElement:
 
     @property
     def position(self) -> Point:
-        return self.rect.point - (self.rect.width / 2, self.rect.height / 2)
+        return self.rect.point
 
     @property
     def global_position(self) -> Point:
         if self.parent:
             return self.parent.global_position + self.position
-        return self.rect.point
+        return self.position
 
     @property
     def global_rect(self) -> Rect:
