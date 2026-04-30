@@ -1,6 +1,6 @@
 import pytest
 
-from src.engine import Event
+from src.engine.core import Event
 
 
 @pytest.fixture

@@ -1,6 +1,6 @@
 import pytest
 
-from engine.ui import Point, Rect
+from src.engine.ui import Point, Rect
 
 """ Point tests. """
 

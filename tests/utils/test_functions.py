@@ -1,6 +1,6 @@
 import pytest
 
-from src.engine import Functions
+from src.engine.core import Functions
 
 
 @pytest.fixture
