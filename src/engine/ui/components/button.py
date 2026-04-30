@@ -55,13 +55,8 @@ class Button(UIElement):
 
     """ --- Mouse event handlers --- """
 
-    def _on_mouse_over(self, p: Point, dp: Point) -> bool:
-        print('over button')
-        return True
-
     def _on_mouse_press(self, p: Point, button: MouseButton, modifiers) -> bool:
         if button == MouseButton.LEFT:
-            print(f"Button '{self.text}' pressed.")
             self.__clicked_on = True
             return True
         return False
