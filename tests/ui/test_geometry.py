@@ -1,6 +1,8 @@
 import pytest
 
-from src.engine.ui.core.geometry import Point, Rect
+from engine.ui import Point, Rect
+
+""" Point tests. """
 
 
 def test_point_addition():
@@ -26,6 +28,23 @@ def test_point_addition_invalid():
         p + (1, '2')
 
 
+def test_point_subtraction():
+    # Point - Point.
+    p1 = Point(5, 6)
+    p2 = Point(3, 4)
+    result = p1 - p2
+    assert result.x == 2 and result.y == 2, (
+        'Point subtraction failed for Point - Point.'
+    )
+
+    # Point - (x, y).
+    p3 = Point(5, 6)
+    result = p3 - (3, 4)
+    assert result.x == 2 and result.y == 2, (
+        'Point subtraction failed for Point - (x, y).'
+    )
+
+
 def test_point_parsing():
     # Tuple (int, int).
     p = Point.parse_from_tuple((5, 6))
@@ -48,6 +67,9 @@ def test_point_parsing_invalid():
 
     with pytest.raises(ValueError):
         Point.parse_from_tuple((1, 'a'))  # Non-numeric value.
+
+
+""" Rect tests. """
 
 
 def test_rect_properties():
