@@ -1,17 +1,16 @@
 from collections.abc import Callable
-from typing import Generic, ParamSpec
+from typing import ParamSpec
 
 P = ParamSpec('P')
-Validator = Callable[..., bool]
 
 
-class Event(Generic[P]):
-    def __init__(self, validators: list[Validator] | None = None):
+class Event[**P]:
+    def __init__(self, validators: set[Callable[P, bool]] = None) -> None:
         # Set of callback functions that will be called when the event is triggered.
         self.callbacks: set[Callable[P, None]] = set()
 
         # Optional list of validator functions that will be called before triggering the event.
-        self.validators = validators or []
+        self.validators = validators if validators is not None else set()
 
     def subscribe(self, fn: Callable[P, None]) -> None:
         """

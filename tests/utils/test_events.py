@@ -17,10 +17,10 @@ def empty_event():
 def event_with_validators() -> Event[[int, str]]:
     event = Event[[int, str]]()
     event.validators = [
-        lambda value: value > 0,  # Validator that checks if the value is positive.
-        lambda _, label: (
-            len(label) > 0
-        ),  # Validator that checks if the label is not empty.
+        # Validator that checks if the value is positive.
+        lambda value, _: value > 0,
+        # Validator that checks if the label is not empty.
+        lambda _, label: len(label) > 0,
     ]
     return event
 
@@ -82,13 +82,13 @@ def test_trigger_does_not_call_callback_when_validator_fails(
 
 def test_clear_removes_all_callbacks(empty_event: Event, empty_callback: callable):
     empty_event.subscribe(empty_callback)
-    empty_event.subscribe(
-        lambda: None
-    )  # Add another callback to ensure all are cleared.
+
+    # Add another callback to ensure all are cleared.
+    empty_event.subscribe(lambda: None)
 
     empty_event.clear()
 
-    assert empty_event.callbacks == []
+    assert empty_event.callbacks == set()
 
 
 def test_event_param_specification():
@@ -96,7 +96,7 @@ def test_event_param_specification():
 
     called = False
 
-    def callback():
+    def callback(_, __):
         nonlocal called
         called = True
 
