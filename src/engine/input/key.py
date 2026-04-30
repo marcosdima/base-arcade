@@ -33,16 +33,16 @@ class Key(Enum):
     Z = arcade.key.Z
 
     # Number keys.
-    ZERO = arcade.key.ZERO
-    ONE = arcade.key.ONE
-    TWO = arcade.key.TWO
-    THREE = arcade.key.THREE
-    FOUR = arcade.key.FOUR
-    FIVE = arcade.key.FIVE
-    SIX = arcade.key.SIX
-    SEVEN = arcade.key.SEVEN
-    EIGHT = arcade.key.EIGHT
-    NINE = arcade.key.NINE
+    ZERO = arcade.key.KEY_0
+    ONE = arcade.key.KEY_1
+    TWO = arcade.key.KEY_2
+    THREE = arcade.key.KEY_3
+    FOUR = arcade.key.KEY_4
+    FIVE = arcade.key.KEY_5
+    SIX = arcade.key.KEY_6
+    SEVEN = arcade.key.KEY_7
+    EIGHT = arcade.key.KEY_8
+    NINE = arcade.key.KEY_9
 
     # Symbol keys.
     SPACE = arcade.key.SPACE
