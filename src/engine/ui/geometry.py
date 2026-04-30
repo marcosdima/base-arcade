@@ -1,3 +1,6 @@
+from arcade import Rect as ArcadeRect
+
+
 class Point:
     def __init__(
         self,
@@ -18,6 +21,20 @@ class Point:
                 return self + parsed
         return NotImplemented
 
+    def __sub__(self, other) -> 'Point':
+        # Point - Point.
+        if isinstance(other, Point):
+            return Point(self.x - other.x, self.y - other.y)
+        # Point - (x, y).
+        elif isinstance(other, tuple):
+            parsed = Point.parse_from_tuple(other)
+            if parsed is not NotImplemented:
+                return self - parsed
+        return NotImplemented
+
+    def __str__(self):
+        return f'Point({self.x}, {self.y})'
+
     @classmethod
     def parse_from_tuple(cls, data: tuple) -> 'Point':
         if len(data) >= 2:
@@ -30,10 +47,13 @@ class Point:
 
 
 class Rect:
-    def __init__(self, point: Point = Point(), width: float = 0, height: float = 0):
-        self.point = point
+    def __init__(self, point: Point | None = None, width: float = 0, height: float = 0):
+        self.point = point if point is not None else Point()
         self.width = width
         self.height = height
+
+    def __str__(self):
+        return f'Rect({self.point}, width={self.width}, height={self.height})'
 
     @property
     def x(self) -> float:
@@ -67,3 +87,18 @@ class Rect:
                     self.y <= b <= self.y + self.height
                 )
         return NotImplemented
+
+    def as_arcade_rect(self) -> ArcadeRect:
+        return ArcadeRect(
+            x=self.x,
+            y=self.y,
+            width=self.width,
+            height=self.height,
+            left=self.x,
+            right=self.x + self.width,
+            bottom=self.y,
+            top=self.y + self.height,
+        )
+
+    def clone(self) -> 'Rect':
+        return Rect(Point(self.x, self.y), self.width, self.height)

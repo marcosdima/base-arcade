@@ -1,4 +1,4 @@
-from ..engine import BaseView
+from ..engine.ui import BaseView
 
 type ViewFactory = callable[[], BaseView]
 
