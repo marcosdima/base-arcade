@@ -77,7 +77,7 @@ def test_rect_properties():
     rect = Rect(Point(x, y), width=width, height=height)
 
     assert rect.x == x, 'Rect x property failed.'
-    assert rect.y == y + height, 'Rect y property failed.'
+    assert rect.y == y, 'Rect y property failed.'
     assert rect.center_x == x + width / 2, 'Rect center_x property failed.'
     assert rect.center_y == y + height / 2, 'Rect center_y property failed.'
     assert rect.center.x == x + width / 2 and rect.center.y == y + height / 2, (
