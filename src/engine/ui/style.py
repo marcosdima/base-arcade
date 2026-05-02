@@ -13,14 +13,6 @@ def color_field():
     return field(default=UNSET, metadata={'color': True})
 
 
-MARGIN_COMBINATION = {
-    'top': 'vertical',
-    'right': 'horizontal',
-    'bottom': 'vertical',
-    'left': 'horizontal',
-}
-
-
 @dataclass
 class BaseDataClass:
     def __post_init__(self):
