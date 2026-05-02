@@ -63,17 +63,31 @@ class Color:
     a: int = 255
 
     def __init__(self, value: ColorProp):
-        r, g, b, a = (
-            # If it's a string, look it up in the color map.
-            COLOR_MAP[value]
-            if isinstance(value, str)
-            # If it's a tuple and has at least 4 values, use the first 4 as RGBA.
-            else value
-            if len(value) >= 4
-            # If it's a tuple with 3 values, use those as RGB and default alpha to 255.
-            else (*value, 255)
-        )
+        r, g, b, a = self.__validate_prop(value)
         self.r, self.g, self.b, self.a = r, g, b, a
+
+    def __validate_prop(self, value: ColorProp) -> ColorValue:
+        # Validate that the string is a valid color name.
+        if isinstance(value, str):
+            if value not in COLOR_MAP:
+                raise ValueError(f'Invalid color name: {value}')
+            return COLOR_MAP[value]
+        # Validate that the tuple is either RGB or RGBA and that all components are in the range 0-255.
+        elif isinstance(value, tuple):
+            if len(value) == 3:
+                r, g, b = value
+                a = 255
+            elif len(value) >= 4:
+                r, g, b, a = value
+            else:
+                raise ValueError('Color tuple must have 3 (RGB) or 4 (RGBA) values.')
+            for component in (r, g, b, a):
+                if not (0 <= component <= 255):
+                    raise ValueError('Color components must be in the range 0-255.')
+            return (r, g, b, a)
+        # If it's neither a string nor a tuple, it's an invalid type.
+        else:
+            raise TypeError('Color value must be a ColorString or a tuple.')
 
     def as_tuple(self) -> ColorValue:
         return (self.r, self.g, self.b, self.a)
