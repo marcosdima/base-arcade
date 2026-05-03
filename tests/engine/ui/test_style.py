@@ -1,4 +1,5 @@
 from src.engine.core.color import Color
+from src.engine.core.font import Font
 from src.engine.ui.style import Border, Margin, Padding, Style
 
 
@@ -119,4 +120,62 @@ def test_style():
     assert style.border.color != Color('green'), (
         'Color fields should be setted as Color at initialization,'
         'but should not be updated to Color when setted after initialization.'
+    )
+
+
+def test_style_merge():
+    style1 = Style(
+        background_color='red',
+        margin=Margin(margin=10, left=2),
+        padding=Padding(padding=5, bottom=3),
+        border=Border(width=3, top=2, radius=10, top_left=5, color='red'),
+    )
+
+    style2 = Style(
+        background_color='blue',
+        margin=Margin(margin=20),
+        padding=Padding(padding=10),
+        border=Border(width=5, radius=20, color='blue'),
+    )
+
+    merged_style = style1.merge(style2)
+
+    assert merged_style.bg == Color('red'), (
+        f'Background color should be taken from the first style, received {merged_style.bg}.'
+    )
+    assert merged_style.margin.get_tuple() == (10, 10, 10, 2), (
+        'Margin tuple should be taken from the first style.'
+    )
+    assert merged_style.padding.get_tuple() == (5, 5, 3, 5), (
+        'Padding tuple should be taken from the first style.'
+    )
+    assert merged_style.border.get_tuple() == (2, 3, 3, 3), (
+        'Border width tuple should be taken from the first style.'
+    )
+    assert merged_style.border.color == Color('red'), (
+        'Border color should be taken from the first style.'
+    )
+    assert merged_style.border.get_radius_tuple() == (5, 10, 10, 10), (
+        'Border radius tuple should be taken from the first style.'
+    )
+
+
+def test_hereditary_font():
+    style1 = Style(font=Font(size=12, color='red'))
+    style2 = Style()
+
+    assert not style2.is_set('font'), 'Font should be set in style2 after heritage.'
+
+    style2.heritage(style1)
+
+    assert style2.font.size == 12, 'Font size should be set correctly in style2.'
+    assert style2.font.color == Color('red'), (
+        'Font color should be inherited from style1 in style2.'
+    )
+
+    style3 = Style(font=Font(size=14))
+    style3.heritage(style1)
+
+    assert style3.font.size == 14, (
+        'Font size should not be inherited from style1 in style3 since it is already set.'
     )

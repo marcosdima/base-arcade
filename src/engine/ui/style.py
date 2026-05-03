@@ -9,20 +9,39 @@ def unset_field():
     return field(default=UNSET)
 
 
-def color_field():
-    return field(default=UNSET, metadata={'color': True})
+def hereditary_field():
+    return field(default=UNSET, metadata={'hereditary': True})
 
 
 @dataclass
 class BaseDataClass:
-    def __post_init__(self):
-        for f in fields(self):
-            value = getattr(self, f.name)
-            if f.metadata.get('color') and value is not UNSET:
-                setattr(self, f.name, Color(value))
-
     def is_set(self, key: str) -> bool:
-        return getattr(self, key) is not UNSET
+        try:
+            val = getattr(self, key)
+        except AttributeError:
+            try:
+                val = getattr(self, f'_{key}')
+            except AttributeError:
+                return False
+        return val is not UNSET
+
+    def __getattribute__(self, name: str):
+        # Use the base implementation to avoid recursion.
+        val = object.__getattribute__(self, name)
+
+        # Only attempt color wrapping for dataclass fields containing 'color'.
+        try:
+            for f in fields(self):
+                if f.name == name and 'color' in f.name:
+                    # If the stored value is UNSET or already a Color, return as-is.
+                    if val is UNSET or isinstance(val, Color):
+                        return val
+                    return Color(val)
+        except Exception:
+            # If anything goes wrong (e.g., fields() can't operate), fall back to raw value.
+            return val
+
+        return val
 
     def resolve_value(self, tries: list[str], default_value) -> float:
         for intent in tries:
@@ -30,6 +49,17 @@ class BaseDataClass:
             if value is not UNSET:
                 return value
         return default_value
+
+    def is_color_field(self, f) -> bool:
+        # Basic heuristic: field name contains 'color'
+        return hasattr(f, 'name') and 'color' in f.name
+
+    def get_hereditary_fields(self) -> dict[str, any]:
+        return {
+            f.name: getattr(self, f.name)
+            for f in fields(self)
+            if f.metadata.get('hereditary') and self.is_set(f.name)
+        }
 
 
 @dataclass
@@ -72,7 +102,7 @@ class Padding(BaseDataClass):
 
 @dataclass
 class Border(BaseDataClass):
-    color: ColorProp = color_field()
+    color: ColorProp = unset_field()
 
     width: float = unset_field()
     top: float = unset_field()
@@ -108,19 +138,38 @@ class Border(BaseDataClass):
 
 @dataclass
 class Style(BaseDataClass):
-    background_color: ColorProp = color_field()
+    background_color: ColorProp = unset_field()
     margin: Margin = field(default_factory=Margin)
     padding: Padding = field(default_factory=Padding)
     border: Border = field(default_factory=Border)
-    font: Font = unset_field()
+    font: Font = hereditary_field()
+
+    @property
+    def bg(self) -> Color:
+        val = self.background_color
+        if val is UNSET:
+            return None
+        return val
 
     def merge(self, other: 'Style') -> 'Style':
-        merged_fields = {}
+        merged_fields = Style()
 
         for f in fields(self):
-            if self.is_set(f.name):
-                merged_fields[f.name] = getattr(self, f.name)
-            elif other.is_set(f.name):
-                merged_fields[f.name] = getattr(other, f.name)
+            name = f.name
+            if self.is_set(name):
+                setattr(merged_fields, name, getattr(self, name))
+            elif other.is_set(name):
+                setattr(merged_fields, name, getattr(other, name))
 
-        return self.__class__(**merged_fields)
+        return merged_fields
+
+    def heritage(self, parent_style: 'Style'):
+        # Get hereditary fields from parent style.
+        hereditary_fields = parent_style.get_hereditary_fields()
+        print(
+            f'Parent style hereditary fields: {hereditary_fields} has font? {parent_style.font}'
+        )
+        for name, value in hereditary_fields.items():
+            print(f'Attempting to inherit {name} with value {value} from parent style.')
+            if not self.is_set(name):
+                setattr(self, name, value)
