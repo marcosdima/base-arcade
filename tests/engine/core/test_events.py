@@ -27,7 +27,7 @@ def event_with_validators() -> Event[[int, str]]:
 
 def test_suscribe_adds_callback(empty_event: Event, empty_callback: callable):
     empty_event.subscribe(empty_callback)
-    assert empty_callback in empty_event.callbacks
+    assert empty_event.has(empty_callback)
 
 
 def test_unsuscribe_removes_existing_callback(
@@ -37,7 +37,7 @@ def test_unsuscribe_removes_existing_callback(
 
     empty_event.unsubscribe(empty_callback)
 
-    assert empty_callback not in empty_event.callbacks
+    assert not empty_event.has(empty_callback)
 
 
 def test_unsuscribe_ignores_unknown_callback(
@@ -105,3 +105,22 @@ def test_event_param_specification():
     event.trigger(42, 'test')
 
     assert called is True
+
+
+def test_event_priority():
+    event = Event[[int]]()
+
+    calls = []
+
+    def callback1(value):
+        calls.append(('callback1', value))
+
+    def callback2(value):
+        calls.append(('callback2', value))
+
+    event.subscribe(callback1, priority=1)
+    event.subscribe(callback2, priority=2)
+
+    event.trigger(42)
+
+    assert calls == [('callback2', 42), ('callback1', 42)]
