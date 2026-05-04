@@ -32,7 +32,6 @@ def on_config_change(key: ConfigKey, value):
             if key == ConfigKey.WINDOW_HEIGHT
             else Config.get(ConfigKey.WINDOW_HEIGHT, 600),
         )
-        print(window.size, value)
     elif key == ConfigKey.TITLE:
         window.set_caption(Config.get(ConfigKey.TITLE, 'My Game'))
 
