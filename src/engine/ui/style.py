@@ -166,10 +166,6 @@ class Style(BaseDataClass):
     def heritage(self, parent_style: 'Style'):
         # Get hereditary fields from parent style.
         hereditary_fields = parent_style.get_hereditary_fields()
-        print(
-            f'Parent style hereditary fields: {hereditary_fields} has font? {parent_style.font}'
-        )
         for name, value in hereditary_fields.items():
-            print(f'Attempting to inherit {name} with value {value} from parent style.')
             if not self.is_set(name):
                 setattr(self, name, value)
