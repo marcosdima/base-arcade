@@ -30,20 +30,37 @@ class Text(UIElement):
         self.font_color = text_props.font_color
 
         # Arcade text instance.
-        self.__text_obj = arcade.Text(
+        self.__current_font = None
+        self.__text_obj = None
+
+    def __create_text(self) -> arcade.Text:
+        font = self.style.font
+        if not font:
+            raise ValueError('Font style must be defined for Text element.')
+
+        text_obj = arcade.Text(
             self.content,
-            0,
-            0,
-            arcade.color.BLACK,
-            14,
+            self.rect.x,
+            self.rect.y,
+            font.color.as_tuple(),
+            font.size,
             anchor_x='left',
             anchor_y='bottom',
         )
+        self.__current_font = font
+        return text_obj
 
     def __update_text(self):
-        self.__text_obj.text = self.content
-        self.__text_obj.x = self.rect.x
-        self.__text_obj.y = self.rect.y
+        font = self.style.font
+        if not font:
+            return
+
+        if not self.__current_font or font != self.__current_font:
+            self.__text_obj = self.__create_text()
+        else:
+            self.__text_obj.text = self.content
+            self.__text_obj.x = self.rect.x
+            self.__text_obj.y = self.rect.y
 
     def draw(self):
         self.__update_text()

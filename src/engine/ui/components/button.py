@@ -24,7 +24,6 @@ class Button(UIElement):
 
         self.label = button_props.text
         self.on_click = button_props.on_click
-        self.style = button_props.style  # lo dejamos opcional por ahora
 
         self.__clicked_on = False
 
@@ -35,23 +34,6 @@ class Button(UIElement):
             ),
         )
         self.add_child(self.text)
-
-    """ --- Core methods --- """
-
-    def draw(self):
-        color = arcade.color.RED
-
-        if self.__clicked_on:
-            color = arcade.color.DARK_GRAY
-        elif self._mouse_over:
-            color = arcade.color.LIGHT_GRAY
-
-        arcade.draw_rect_filled(
-            rect=self.rect.as_arcade_rect(),
-            color=color,
-            tilt_angle=0,  # No rotation for now.
-        )
-        super().draw()
 
     """ --- Mouse event handlers --- """
 
@@ -69,3 +51,9 @@ class Button(UIElement):
                     self.on_click()
             return True
         return False
+
+    def _on_mouse_in(self, p):
+        self.style.background_color = 'dark_blue'
+
+    def _on_mouse_out(self, p):
+        self.style.background_color = 'gray'

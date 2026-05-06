@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field, fields
 
-from ..core import Color, ColorProp, Font
+from ..core import Color, ColorProp, Draw, Font
+from .geometry import Rect
 
 UNSET = object()
 
@@ -144,12 +145,8 @@ class Style(BaseDataClass):
     border: Border = field(default_factory=Border)
     font: Font = hereditary_field()
 
-    @property
-    def bg(self) -> Color:
-        val = self.background_color
-        if val is UNSET:
-            return None
-        return val
+    def draw_background(self, rect: Rect):
+        Draw.draw_rect(rect=rect, style=self)
 
     def merge(self, other: 'Style') -> 'Style':
         merged_fields = Style()
