@@ -1,4 +1,5 @@
 from .color import Color, ColorProp, ColorString
+from .draw import Draw
 from .event import Event
 from .font import AnchorX, AnchorY, Font
 from .functions import Functions
@@ -14,4 +15,5 @@ __all__ = [
     'Font',
     'AnchorX',
     'AnchorY',
+    'Draw',
 ]
