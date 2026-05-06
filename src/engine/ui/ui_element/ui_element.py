@@ -1,15 +1,9 @@
-from ..input import MouseButton
-from .geometry import Point, Rect
-
-
-class Debug:
-    def __init__(self, owner: 'UIElement', enabled: bool = False):
-        self.enabled = enabled
-        self.owner = owner
-
-    def print(self, title: str, message: str):
-        if self.enabled:
-            print(f'\t [DEBUG] {title} {message}')
+from ...input import MouseButton
+from ..geometry import Point, Rect
+from ..style import Style
+from .debug import Debug
+from .events import UIEvents
+from .state import UIState, UIStateValue
 
 
 class UIElementProps:
@@ -19,6 +13,7 @@ class UIElementProps:
         z_index: int = 0,
         name: str | None = None,
         debug: bool = False,
+        style: Style | dict[UIStateValue, Style] | None = None,
     ):
         if isinstance(rect, Rect):
             self.rect = rect
@@ -28,6 +23,7 @@ class UIElementProps:
         self.z_index = z_index
         self.name = name
         self.debug = debug
+        self.style = style
 
 
 class UIElement:
@@ -49,19 +45,25 @@ class UIElement:
             if props.name is not None
             else f'{self.__class__.__name__}_{self.id}'
         )
-        self.str = 'A'
 
         # Parent-child relationship.
         self.parent: UIElement | None = None
         self.children: list[UIElement] = []
 
-        # Flags.
-        self.__disabled = False
-        self.__visible = True
-        self._mouse_over = False
-
         # Debugging.
         self.debug = Debug(self, enabled=props.debug)
+
+        # Set state.
+        self.state = UIState()
+        if props.style:
+            if isinstance(props.style, dict):
+                for state, style in props.style.items():
+                    self.state.save_style(style, state)
+            else:
+                self.state.save_style(props.style, UIStateValue.ACTIVE)
+
+        # Set events.
+        self.events = UIEvents(self)
 
     @property
     def position(self) -> Point:
@@ -87,19 +89,29 @@ class UIElement:
     def is_visible(self) -> bool:
         if self.parent and not self.parent.is_visible:
             return False
-        return self.__visible
+        return self.state.visible
 
     @property
     def is_disabled(self) -> bool:
-        if self.parent and self.parent.is_disabled():
+        if self.parent and self.parent.is_disabled:
             return True
-        return self.__disabled
+        return self.state.disabled
+
+    @property
+    def style(self) -> Style:
+        curr_state = self.state.style
+        if self.parent:
+            return curr_state.merge(self.parent.style)
+        return curr_state
 
     def change_visibility(self, visible: bool):
-        self.__visible = visible
+        self.state.visible = visible
 
     def change_disabled(self, disabled: bool):
-        self.__disabled = disabled
+        if disabled:
+            self.state.disable()
+        else:
+            self.state.enable()
 
     def contains(self, global_point: Point | tuple) -> bool:
         if not self.parent:
@@ -109,7 +121,7 @@ class UIElement:
     """ --- Parent-child relationship --- """
 
     def add_child(self, child: 'UIElement'):
-        child.parent = self
+        child.set_parent(self)
         self.children.append(child)
 
     def remove_child(self, child: 'UIElement'):
@@ -119,11 +131,21 @@ class UIElement:
         else:
             raise ValueError(f"Child {child} not found in {self.name}'s children.")
 
+    def set_parent(self, parent: 'UIElement'):
+        self.parent = parent
+        if parent is not None:
+            self.state.style.heritage(parent.state.style)
+
     """ --- Core methods --- """
 
     def draw(self):
         if not self.is_visible:
             return
+
+        arcade_global_rect = self.global_rect.as_arcade_rect()
+
+        # Draw background if style has a background color.
+        self.style.draw_background(arcade_global_rect)
 
         for child in self.children:
             child.draw()
@@ -139,25 +161,22 @@ class UIElement:
 
         # If element does not contain the mouse position, the omit it.
         if not self.contains(p):
-            if self._mouse_over:
-                self._mouse_over = False
-                self.debug.print('↑', f'[{self.name}] exited @ {p}')
+            if self.state.mouse_over:
+                self.state.set_mouse_over(False)
 
                 # Captured by itself.
-                if not self._on_mouse_out(p):
+                if not self.events.trigger('on_mouse_out', p):
                     return self.__propagate_event('receive_mouse_motion', x, y, dx, dy)
             return False
 
         # If contains it and _mouse_over is False, trigger on_mouse_in.
-        elif not self._mouse_over:
-            self._mouse_over = True
-            self.debug.print('↓', f'[{self.name}] entered @ {p}')
-            if not self._on_mouse_in(p):
+        elif not self.state.mouse_over:
+            self.state.set_mouse_over(True)
+            if not self.events.trigger('on_mouse_in', p):
                 return self.__propagate_event('receive_mouse_motion', x, y, dx, dy)
 
         # Trigger on_mouse_over.
-        self.debug.print('→', f'[{self.name}] mouse over @ {p} | Δ {dp}')
-        was_consumed = self._on_mouse_over(p, dp)
+        was_consumed = self.events.trigger('on_mouse_over', p, dp)
         if was_consumed:
             return True
 
@@ -168,15 +187,14 @@ class UIElement:
         p = Point(x, y)
 
         # If element is disabled or not under mouse, do nothing.
-        if self.__disabled or not self._mouse_over:
+        if self.state.disabled or not self.state.mouse_over:
             return False
 
+        # Catch event to change state to clicked.
+        self.state.set_clicked_on(True)
+
         # Trigger on_mouse_press.
-        was_consumed = self._on_mouse_press(p, button, modifiers)
-        self.debug.print(
-            '⬤',
-            f'[{self.name}] pressed @ {p} | btn: {button} | consumed: {was_consumed}',
-        )
+        was_consumed = self.events.trigger('on_mouse_press', p, button, modifiers)
         if was_consumed:
             return True
 
@@ -187,15 +205,14 @@ class UIElement:
         p = Point(x, y)
 
         # If element is disabled or not under mouse, do nothing.
-        if self.__disabled or not self._mouse_over:
+        if self.state.disabled or not self.state.mouse_over:
             return False
 
+        # Catch event to change state from clicked to hover/active.
+        self.state.set_clicked_on(False)
+
         # Trigger on_mouse_release.
-        was_consumed = self._on_mouse_release(p, button, modifiers)
-        self.debug.print(
-            '○',
-            f'[{self.name}] released @ {p} | btn: {button} | consumed: {was_consumed}',
-        )
+        was_consumed = self.events.trigger('on_mouse_release', p, button, modifiers)
         if was_consumed:
             return True
 
@@ -206,15 +223,11 @@ class UIElement:
         p = Point(x, y)
 
         # If element is disabled or not under mouse, do nothing.
-        if self.__disabled or not self._mouse_over:
+        if self.state.disabled or not self.state.mouse_over:
             return False
 
         # Trigger on_mouse_scroll.
-        was_consumed = self._on_mouse_scroll(p, scroll_x, scroll_y)
-        self.debug.print(
-            '⟲',
-            f'[{self.name}] scroll @ {p} | Δ ({scroll_x}, {scroll_y}) | consumed: {was_consumed}',
-        )
+        was_consumed = self.events.trigger('on_mouse_scroll', p, scroll_x, scroll_y)
         if was_consumed:
             return True
 
@@ -235,6 +248,7 @@ class UIElement:
 
             # Call the handler and check if the event was consumed.
             was_consumed = handler(*args, **kwargs)
+
             if was_consumed:
                 return True
 
