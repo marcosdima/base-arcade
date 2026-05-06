@@ -1,25 +1,21 @@
 from arcade import View
 
 from ..input import KeyboardHandler, MouseHandler
-from .ui_element import UIElement, UIElementProps
+from .ui_element import UIElement
 
 
 class BaseView(View):
-    def __init__(self):
+    def __init__(self, root: UIElement):
         super().__init__()
 
         # Input handlers.
         self.keyboard_handler = KeyboardHandler()
         self.mouse_handler = MouseHandler()
 
-        # Root ui element.
-        ui_props = UIElementProps(
-            rect=(0, 0, self.window.width, self.window.height),
-            name='root',
-        )
-        self.root = UIElement(ui_props)
+        self.root = root
 
     def on_draw(self):
+        self.clear()
         self.root.draw()
         return super().on_draw()
 
