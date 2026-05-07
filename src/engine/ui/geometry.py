@@ -35,6 +35,11 @@ class Point:
     def __str__(self):
         return f'Point({self.x}, {self.y})'
 
+    def __mul__(self, scalar) -> 'Point':
+        if isinstance(scalar, float):
+            return Point(self.x * scalar, self.y * scalar)
+        return NotImplemented
+
     @classmethod
     def parse_from_tuple(cls, data: tuple) -> 'Point':
         if len(data) >= 2:
@@ -118,3 +123,6 @@ class Rect:
 
     def clone(self) -> 'Rect':
         return Rect(Point(self.x, self.y), self.width, self.height)
+
+    def just_size(self) -> 'Rect':
+        return Rect(Point(0, 0), self.width, self.height)
