@@ -151,7 +151,9 @@ class UIElement:
             child.draw()
 
     def update(self, dt: float):
-        self.__propagate_event('on_update', dt)
+        self.debug.show(dt)
+        for child in self.children:
+            child.update(dt)
 
     """ --- Input event handlers --- """
 
