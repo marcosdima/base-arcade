@@ -19,6 +19,10 @@ class BaseView(View):
         self.root.draw()
         return super().on_draw()
 
+    def on_update(self, delta_time):
+        self.root.update(delta_time)
+        return super().on_update(delta_time)
+
     """ --- Arcade input event handlers --- """
 
     def on_key_press(self, key: int, modifiers: int):
