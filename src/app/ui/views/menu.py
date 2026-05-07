@@ -23,17 +23,17 @@ class MenuView(BaseView):
                     UIStateValue.ACTIVE: Style(
                         background_color='red',
                         font=Font(name='Roboto', size=20),
-                        border=Border(width=3, color='green', radius=2),
+                        border=Border(width=3, color='black', radius=5),
                     ),
                     UIStateValue.HOVER: Style(
-                        background_color='yellow',
+                        background_color='dark_red',
                         font=Font(name='Roboto', size=20, color='yellow'),
-                        border=Border(width=2, color='white', radius=5),
+                        border=Border(width=3, color='yellow', radius=5),
                     ),
                     UIStateValue.CLICKED: Style(
                         background_color='green',
                         font=Font(name='Roboto', size=20, color='white'),
-                        border=Border(width=2, color='black'),
+                        border=Border(width=3, color='black', radius=5),
                     ),
                 },
             ),
