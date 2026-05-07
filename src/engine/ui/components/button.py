@@ -28,7 +28,7 @@ class Button(UIElement):
         self.__clicked_on = False
 
         self.text = Text(
-            props=UIElementProps(rect=self.rect.clone()),
+            props=UIElementProps(rect=self.rect.just_size()),
             text_props=TextProps(
                 text=button_props.text, font_color=arcade.color.WHITE, font_size=14
             ),
