@@ -146,7 +146,30 @@ class Style(BaseDataClass):
     font: Font = hereditary_field()
 
     def draw_background(self, rect: Rect):
-        Draw.draw_rect(rect=rect, style=self)
+        has_background = self.is_set('background_color')
+        has_border = self.border.is_set('width')
+
+        # Do nothing.
+        if not has_border and not has_background:
+            return
+
+        start_x, start_y = (rect.x - rect.width / 2, rect.y - rect.height / 2)
+
+        if not has_border:  # TODO: This does not work. Draws a rect.
+            return
+
+        tl, tr, br, bl = self.border.get_radius_tuple()
+        Draw.filled_rounded_rect(
+            xywh=(start_x, start_y, rect.width, rect.height),
+            color=self.background_color if has_background else Color('transparent'),
+            radius=(tl, tr, br, bl),
+        )
+        Draw.outline_rounded_rect(
+            xywh=(start_x, start_y, rect.width, rect.height),
+            color=self.border.color,
+            radius=(tl, tr, br, bl),
+            border_width=self.border.width,
+        )
 
     def merge(self, other: 'Style') -> 'Style':
         merged_fields = Style()
