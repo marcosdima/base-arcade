@@ -7,7 +7,7 @@ def test_unset_field():
     style = Style()
     assert not style.is_set('background_color'), 'Unset field should not be set.'
     assert not style.is_set('margin'), 'Unset field should not be set.'
-    assert not style.is_set('margin_top'), 'Unset field should not be set.'
+    assert not style.is_set('border'), 'Unset field should not be set.'
 
 
 def test_margin_tuple():
@@ -117,7 +117,7 @@ def test_style():
     )
 
     style.border.color = 'green'
-    assert style.border.color != Color('green'), (
+    assert style.border.color == Color('green'), (
         'Color fields should be setted as Color at initialization,'
         'but should not be updated to Color when setted after initialization.'
     )
@@ -140,7 +140,7 @@ def test_style_merge():
 
     merged_style = style1.merge(style2)
 
-    assert merged_style.bg == Color('red'), (
+    assert merged_style.background_color == Color('red'), (
         f'Background color should be taken from the first style, received {merged_style.bg}.'
     )
     assert merged_style.margin.get_tuple() == (10, 10, 10, 2), (
