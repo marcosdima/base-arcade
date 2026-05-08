@@ -27,7 +27,6 @@ class Text(UIElement):
         props: UIElementProps,
         text_props: TextProps,
     ):
-        props.debug = True
         super().__init__(props)
 
         self.content = text_props.text
