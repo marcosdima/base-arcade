@@ -1,3 +1,4 @@
+from .animation import AnimationValue
 from .color import Color, ColorProp, ColorString
 from .draw import Draw
 from .event import Event
@@ -16,4 +17,5 @@ __all__ = [
     'AnchorX',
     'AnchorY',
     'Draw',
+    'AnimationValue',
 ]
