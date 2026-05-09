@@ -13,12 +13,8 @@ class TextProps:
     def __init__(
         self,
         text: str,
-        font_size: int = 14,
-        font_color: tuple[int, int, int] = (0, 0, 0),
     ):
         self.text = text
-        self.font_size = font_size
-        self.font_color = font_color
 
 
 class Text(UIElement):
@@ -30,10 +26,6 @@ class Text(UIElement):
         super().__init__(props)
 
         self.content = text_props.text
-
-        # Font properties.
-        self.font_size = text_props.font_size
-        self.font_color = text_props.font_color
 
         # Arcade text instance.
         self.__current_font = None
@@ -56,8 +48,11 @@ class Text(UIElement):
         self, anchor_x: AnchorX = 'center', anchor_y: AnchorY = 'center'
     ) -> arcade.Text:
         font = self.style.font
-        if not font:
-            raise ValueError('Font style must be defined for Text element.')
+
+        if not self.style.is_set(font):
+            raise ValueError(
+                f'Font style must be defined for Text element. In: {self.name}'
+            )
 
         if anchor_x == 'center':
             x = self.global_rect.center_x
@@ -88,19 +83,22 @@ class Text(UIElement):
 
     def __update_text(self):
         font = self.style.font
-        if not font:
+        if not self.style.is_set(font):
             return
 
+        # Reasons to update text object.
         if (
             not self.__current_font
             or font != self.__current_font
             or self.__text_obj.text != self.content
+            or font.color != self.__text_obj.color
         ):
             self.__text_obj = self.__create_text()
 
     def draw(self):
         super().draw()
-        self.__text_obj.draw()
+        if self.__text_obj:
+            self.__text_obj.draw()
 
     def update(self, dt):
         self.__update_text()
