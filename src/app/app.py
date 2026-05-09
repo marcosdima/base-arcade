@@ -1,3 +1,4 @@
+from ..engine.core import Font
 from ..engine.ui import Style, UIElement, UIElementProps
 from .router import Router
 from .ui.views import MenuView
@@ -10,7 +11,9 @@ class App:
         self.app_root = UIElement(
             props=UIElementProps(
                 rect=(0, 0, self.window.width, self.window.height),
-                style=Style(),
+                style=Style(
+                    font=Font(name='Arial', size=14, font_color='red'),
+                ),
                 name='app_root',
                 debug=False,
             ),
