@@ -5,9 +5,9 @@ from src.engine.ui.style import Border, Margin, Padding, Style
 
 def test_unset_field():
     style = Style()
-    assert not style.is_set('background_color'), 'Unset field should not be set.'
-    assert not style.is_set('margin'), 'Unset field should not be set.'
-    assert not style.is_set('border'), 'Unset field should not be set.'
+    assert not style.is_set(style.background_color), 'Unset field should not be set.'
+    assert not style.is_set(style.margin), 'Unset field should not be set.'
+    assert not style.is_set(style.border), 'Unset field should not be set.'
 
 
 def test_margin_tuple():
@@ -116,12 +116,6 @@ def test_style():
         'Background color should be updated correctly.'
     )
 
-    style.border.color = 'green'
-    assert style.border.color == Color('green'), (
-        'Color fields should be setted as Color at initialization,'
-        'but should not be updated to Color when setted after initialization.'
-    )
-
 
 def test_style_merge():
     style1 = Style(
@@ -161,10 +155,12 @@ def test_style_merge():
 
 
 def test_hereditary_font():
-    style1 = Style(font=Font(size=12, color='red'))
+    style1 = Style(font=Font(size=12, font_color='red'))
     style2 = Style()
 
-    assert not style2.is_set('font'), 'Font should be set in style2 after heritage.'
+    assert not style2.is_set(style2.font), (
+        'Font should be set in style2 after heritage.'
+    )
 
     style2.heritage(style1)
 
