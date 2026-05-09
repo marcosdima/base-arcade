@@ -15,12 +15,12 @@ class Font:
 
     name: str = 'Arial'
     size: int = 12
-    color: ColorProp = 'black'
+    font_color: ColorProp = 'black'
     bold: bool = False
     italic: bool = False
 
-    def __post_init__(self) -> None:
-        self.color = Color(self.color)
+    def __post_init__(self):
+        self.color = Color(self.font_color)
 
     def instance_text(
         self,
@@ -56,7 +56,7 @@ class Font:
         return Font(
             name=name if name is not None else self.name,
             size=size if size is not None else self.size,
-            color=color if color is not None else self.color.as_tuple(),
+            font_color=color if color is not None else self.font_color,
             bold=bold if bold is not None else self.bold,
             italic=italic if italic is not None else self.italic,
         )
