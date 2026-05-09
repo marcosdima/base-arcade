@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Literal
 
+from arcade.color import Color as ArcadeColor
+
 ColorString = Literal[
     'red',
     'green',
@@ -87,7 +89,9 @@ class Color:
             return (r, g, b, a)
         # If it's neither a string nor a tuple, it's an invalid type.
         else:
-            raise TypeError('Color value must be a ColorString or a tuple.')
+            raise TypeError(
+                f'Color value must be a ColorString or a tuple. Received: {value}'
+            )
 
     def as_tuple(self) -> ColorValue:
         return (self.r, self.g, self.b, self.a)
@@ -107,3 +111,11 @@ class Color:
                 self.a,
             )
         )
+
+    def __eq__(self, value):
+        if isinstance(value, Color):
+            return self.as_tuple() == value.as_tuple()
+        elif isinstance(value, ArcadeColor):
+            return self.as_tuple() == (value.r, value.g, value.b, value.a)
+        else:
+            return False
