@@ -1,6 +1,7 @@
 from ...input import MouseButton
 from ..geometry import Point, Rect
 from ..style import Style
+from .animations import Animations
 from .debug import Debug
 from .events import UIEvents
 from .state import UIState, UIStateValue
@@ -54,16 +55,20 @@ class UIElement:
         self.debug = Debug(self, enabled=props.debug)
 
         # Set state.
-        self.state = UIState()
+        self.state = UIState(self)
         if props.style:
             if isinstance(props.style, dict):
                 for state, style in props.style.items():
-                    self.state.save_style(style, state)
+                    self.state.change_state_style(state, style)
             else:
-                self.state.save_style(props.style, UIStateValue.ACTIVE)
+                self.state.change_state_style(UIStateValue.ACTIVE, props.style)
+        self.computed_style = None
 
         # Set events.
         self.events = UIEvents(self)
+
+        # Set animations.
+        self.animations = Animations(self)
 
     @property
     def position(self) -> Point:
@@ -99,10 +104,14 @@ class UIElement:
 
     @property
     def style(self) -> Style:
-        curr_state = self.state.style
-        if self.parent:
-            return curr_state.merge(self.parent.style)
-        return curr_state
+        if self.computed_style is not None:
+            return self.computed_style
+
+        self.computed_style = self.state.active_style.copy()
+        if self.parent and self.parent.style:
+            self.computed_style.heritage(self.parent.style)
+
+        return self.computed_style
 
     def change_visibility(self, visible: bool):
         self.state.visible = visible
@@ -133,8 +142,6 @@ class UIElement:
 
     def set_parent(self, parent: 'UIElement'):
         self.parent = parent
-        if parent is not None:
-            self.state.style.heritage(parent.state.style)
 
     """ --- Core methods --- """
 
@@ -145,13 +152,15 @@ class UIElement:
         arcade_global_rect = self.global_rect.as_arcade_rect()
 
         # Draw background if style has a background color.
-        self.style.draw_background(arcade_global_rect)
+        if self.style:
+            self.style.draw_background(arcade_global_rect)
 
         for child in self.children:
             child.draw()
 
     def update(self, dt: float):
         self.debug.show(dt)
+        self.animations.update(dt)
         for child in self.children:
             child.update(dt)
 
