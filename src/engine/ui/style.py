@@ -140,9 +140,9 @@ class Border(BaseDataClass):
 @dataclass
 class Style(BaseDataClass):
     background_color: ColorProp = unset_field()
-    margin: Margin = field(default_factory=Margin)
-    padding: Padding = field(default_factory=Padding)
-    border: Border = field(default_factory=Border)
+    margin: Margin = unset_field()
+    padding: Padding = unset_field()
+    border: Border = unset_field()
     font: Font = hereditary_field()
 
     def draw_background(self, rect: Rect):
